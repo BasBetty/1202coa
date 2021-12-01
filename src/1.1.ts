@@ -1,0 +1,56 @@
+import { readFile } from 'fs/promises';
+
+interface Counter {
+  increases: number;
+  previousDepth: number;
+}
+
+const solveA = (input: string): number =>
+  input
+    .trim()
+    .split(/\s+/)
+    .reduce(
+      ({ increases, previousDepth }: Counter, rawDepth: string): Counter => {
+        const depth = parseInt(rawDepth, 10);
+
+        return {
+          increases: depth > previousDepth ? increases + 1 : increases,
+          previousDepth: depth,
+        };
+      },
+      { increases: -1, previousDepth: 0 }
+    ).increases;
+
+const solveB = (input: string): number => {
+  const rawDepths = input.trim().split(/\s+/);
+
+  let increases = 0;
+  let depth = parseInt(rawDepths[0]!, 10);
+
+  // start at the second entry, because the first has no precedent
+  for (let i = 1; i < rawDepths.length; i += 1) {
+    const nextDepth = parseInt(rawDepths[i]!, 10);
+
+    if (nextDepth > depth) increases += 1;
+
+    depth = nextDepth;
+  }
+
+  return increases;
+};
+
+(async (): Promise<void> => {
+  const input = await readFile('./input/1', { encoding: 'utf-8' });
+
+  const startA = performance.now();
+  const solutionA = solveA(input);
+  const endA = performance.now();
+
+  console.log(`A: (${endA - startA}ms) ${solutionA}`);
+
+  const startB = performance.now();
+  const solutionB = solveB(input);
+  const endB = performance.now();
+
+  console.log(`A: (${endB - startB}ms) ${solutionB}`);
+})();
