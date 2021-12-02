@@ -42,7 +42,7 @@ const solveB = (input: string): number => {
   let depth = 0;
 
   for (let i = 0; i < depths.length; i += 1) {
-    const nextDepth = depth - (depths[i] ?? 0) + depths[i + windowSize]!;
+    const nextDepth = depth - depths[i]! + depths[i + windowSize]!;
 
     if (nextDepth > depth) increases += 1;
 
