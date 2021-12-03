@@ -26,17 +26,17 @@ const solveA = (input: string[]): number => {
       co2s = co2s.filter((line: string): boolean => line[i] === lc);
   }
 
-  let oxygen = 0;
+  let o2 = 0;
   let co2 = 0;
 
   for (let i = 0; i < m; i += 1) {
     const x = 2 ** (m - 1 - i);
 
-    if (o2s[0]![i] === '1') oxygen += x;
+    if (o2s[0]![i] === '1') o2 += x;
     if (co2s[0]![i] === '1') co2 += x;
   }
 
-  return oxygen * co2;
+  return o2 * co2;
 };
 
 (async (): Promise<void> => {
