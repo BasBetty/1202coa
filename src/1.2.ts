@@ -1,24 +1,23 @@
-import { readFile } from 'fs/promises';
+import { readLines } from './readLines';
 
-const solveA = (input: string): number => {
+const solveA = (input: string[]): number => {
   const windowSize = 3;
-  const rawDepths = input.trim().split(/\s+/);
 
   let increases = 0;
 
-  let window = rawDepths
+  let window = input
     .slice(0, windowSize)
     .reverse()
     .map((rawDepth: string): number => parseInt(rawDepth, 10));
 
-  for (let i = windowSize; i < rawDepths.length; i += 1) {
+  for (let i = windowSize; i < input.length; i += 1) {
     let depth = 0;
     let nextDepth = 0;
 
     for (let j = 0; j < windowSize; j += 1) depth += window[j]!;
 
     window.pop();
-    window = [parseInt(rawDepths[i]!, 10), ...window];
+    window = [parseInt(input[i]!, 10), ...window];
 
     for (let j = 0; j < windowSize; j += 1) nextDepth += window[j]!;
 
@@ -31,12 +30,12 @@ const solveA = (input: string): number => {
 };
 
 // no array necessary
-const solveB = (input: string): number => {
+const solveB = (input: string[]): number => {
   const windowSize = 3;
-  const depths = input
-    .trim()
-    .split(/\s+/)
-    .map((rawDepth: string): number => parseInt(rawDepth, 10));
+
+  const depths = input.map((rawDepth: string): number =>
+    parseInt(rawDepth, 10)
+  );
 
   let increases = 0;
   let depth = 0;
@@ -53,7 +52,7 @@ const solveB = (input: string): number => {
 };
 
 (async (): Promise<void> => {
-  const input = await readFile('./input/1', { encoding: 'utf-8' });
+  const input = await readLines('./input/1');
 
   const startA = performance.now();
   const solutionA = solveA(input);
