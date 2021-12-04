@@ -13,7 +13,7 @@ const transposeM = <T>(rows: T[][]): T[][] => {
   return columns;
 };
 
-const solveA = (input: string[]): number => {
+const solveA = (input: string[]): Maybe<number> => {
   const marked = input[0]?.split(',').map(read10);
   const boards: Set<number>[][] = [];
   let rows: number[][] = [];
@@ -46,7 +46,7 @@ const solveA = (input: string[]): number => {
               for (let l = 0; l < boards[j]!.length / 2; l += 1)
                 x += sum([...boards[j]![l]!]);
 
-              return x * marked![i]!;
+              return { just: x * marked![i]! };
             }
 
             winners.add(j);
@@ -56,7 +56,7 @@ const solveA = (input: string[]): number => {
     }
   }
 
-  throw new Error('solution not found');
+  return;
 };
 
 (async (): Promise<void> => {
