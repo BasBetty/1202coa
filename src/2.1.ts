@@ -1,3 +1,4 @@
+import { read10 } from './readInt';
 import { readLines } from './readLines';
 
 interface V3 {
@@ -10,7 +11,7 @@ const solveA = (input: string[]): number => {
   const { x, z } = input.reduce(
     ({ x, y, z }: V3, rawInstruction: string): V3 => {
       const [, direction, rawValue] = /(\w+) (\d+)/.exec(rawInstruction)!;
-      const value = parseInt(rawValue!, 10);
+      const value = read10(rawValue!);
 
       if (direction === 'forward') return { x: x + value, y, z };
       if (direction === 'down') return { x, y, z: z + value };

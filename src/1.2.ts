@@ -1,3 +1,4 @@
+import { read10 } from './readInt';
 import { readLines } from './readLines';
 
 const solveA = (input: string[]): number => {
@@ -5,10 +6,7 @@ const solveA = (input: string[]): number => {
 
   let increases = 0;
 
-  let window = input
-    .slice(0, windowSize)
-    .reverse()
-    .map((rawDepth: string): number => parseInt(rawDepth, 10));
+  let window = input.slice(0, windowSize).reverse().map(read10);
 
   for (let i = windowSize; i < input.length; i += 1) {
     let depth = 0;
@@ -31,17 +29,13 @@ const solveA = (input: string[]): number => {
 
 // no array necessary
 const solveB = (input: string[]): number => {
-  const windowSize = 3;
-
-  const depths = input.map((rawDepth: string): number =>
-    parseInt(rawDepth, 10)
-  );
+  const depths = input.map(read10);
 
   let increases = 0;
   let depth = 0;
 
   for (let i = 0; i < depths.length; i += 1) {
-    const nextDepth = depth - depths[i]! + depths[i + windowSize]!;
+    const nextDepth = depth - depths[i]! + depths[i + 3]!;
 
     if (nextDepth > depth) increases += 1;
 
@@ -53,10 +47,7 @@ const solveB = (input: string[]): number => {
 
 // no state necessary
 const solveC = (input: string[]): number => {
-  const depths = input.map((rawDepth: string): number =>
-    parseInt(rawDepth, 10)
-  );
-
+  const depths = input.map(read10);
   let increases = 0;
 
   for (let i = 0; i < depths.length; i += 1)

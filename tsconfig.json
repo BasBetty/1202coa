@@ -5,6 +5,7 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "alwaysStrict": true,
+    "downlevelIteration": true,
     "exactOptionalPropertyTypes": true,
     "experimentalDecorators": true,
     "lib": ["DOM", "ES2020"],

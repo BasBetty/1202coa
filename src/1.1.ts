@@ -1,3 +1,4 @@
+import { read10 } from './readInt';
 import { readLines } from './readLines';
 
 interface Counter {
@@ -8,7 +9,7 @@ interface Counter {
 const solveA = (input: string[]): number =>
   input.reduce(
     ({ increases, previousDepth }: Counter, rawDepth: string): Counter => {
-      const depth = parseInt(rawDepth, 10);
+      const depth = read10(rawDepth);
 
       return {
         increases: depth > previousDepth ? increases + 1 : increases,
@@ -20,7 +21,7 @@ const solveA = (input: string[]): number =>
 
 const solveB = (input: string[]): number => {
   let increases = 0;
-  let depth = parseInt(input[0]!, 10);
+  let depth = read10(input[0]!);
 
   // start at the second entry, because the first has no precedent
   for (let i = 1; i < input.length; i += 1) {
