@@ -51,6 +51,20 @@ const solveB = (input: string[]): number => {
   return increases;
 };
 
+// no state necessary
+const solveC = (input: string[]): number => {
+  const depths = input.map((rawDepth: string): number =>
+    parseInt(rawDepth, 10)
+  );
+
+  let increases = 0;
+
+  for (let i = 0; i < depths.length; i += 1)
+    if (depths[i]! < depths[i + 3]!) increases += 1;
+
+  return increases;
+};
+
 (async (): Promise<void> => {
   const input = await readLines('./input/1');
 
@@ -65,4 +79,10 @@ const solveB = (input: string[]): number => {
   const endB = performance.now();
 
   console.log(`B: (${endB - startB}ms) ${solutionB}`);
+
+  const startC = performance.now();
+  const solutionC = solveC(input);
+  const endC = performance.now();
+
+  console.log(`C: (${endC - startC}ms) ${solutionC}`);
 })();
