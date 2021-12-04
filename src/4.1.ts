@@ -19,7 +19,7 @@ const solveA = (input: string[]): number => {
   let rows: number[][] = [];
 
   for (let i = 2; i < input.length; i += 1) {
-    if (i % 8 === 1) {
+    if (i % 6 === 1) {
       boards.push([
         ...rows.map((row: number[]): Set<number> => new Set(row)),
         ...transposeM(rows).map((row: number[]): Set<number> => new Set(row)),
