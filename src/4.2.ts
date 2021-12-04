@@ -69,5 +69,5 @@ const solveA = (input: string[]): Maybe<number> => {
 
   if (solutionA === Nothing) throw new Error('wtf');
 
-  console.log(`A: (${endA - startA}ms) ${solutionA}`);
+  console.log(`A: (${endA - startA}ms) ${solutionA.just}`);
 })();
