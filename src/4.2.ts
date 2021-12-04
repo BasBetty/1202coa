@@ -1,3 +1,4 @@
+import { Maybe, Nothing } from './Maybe';
 import { read10 } from './readInt';
 import { readLines } from './readLines';
 import { sum } from './sum';
@@ -65,6 +66,8 @@ const solveA = (input: string[]): Maybe<number> => {
   const startA = performance.now();
   const solutionA = solveA(input);
   const endA = performance.now();
+
+  if (solutionA === Nothing) throw new Error('wtf');
 
   console.log(`A: (${endA - startA}ms) ${solutionA}`);
 })();

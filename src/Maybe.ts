@@ -1,7 +1,7 @@
-type Nothing = undefined;
+export const Nothing = undefined;
 
-interface Just<T> {
+export interface Just<T> {
   just: T;
 }
 
-type Maybe<T> = Nothing | Just<T>;
+export type Maybe<T> = typeof Nothing | Just<T>;
