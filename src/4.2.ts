@@ -4,7 +4,7 @@ import { readLines } from './readLines';
 import { sum } from './sum';
 
 const transposeM = <T>(rows: T[][]): T[][] => {
-  const columns: T[][] = new Array(rows.length);
+  const columns: T[][] = [];
 
   for (let i = 0; i < rows.length; i += 1) columns[i] = [];
 
@@ -19,6 +19,8 @@ const solveA = (input: string[]): Maybe<number> => {
   const boards: Set<number>[][] = [];
   let rows: number[][] = [];
 
+  const p = performance.now();
+
   for (let i = 2; i < input.length; i += 1) {
     if (i % 6 === 1) {
       boards.push([
@@ -31,6 +33,8 @@ const solveA = (input: string[]): Maybe<number> => {
       rows.push(input[i]!.trim().split(/\s+/).map(read10));
     }
   }
+
+  console.log(performance.now() - p);
 
   const winners = new Set();
 
