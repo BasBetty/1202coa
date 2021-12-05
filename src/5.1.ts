@@ -5,14 +5,14 @@ const solveA = (input: string[]): number => {
   const points = new Map<string, number>();
 
   for (let i = 0; i < input.length; i += 1) {
-    const [a, b] = input[i]!.split(' -> ');
-    const [x1string, y1string] = a!.split(',');
-    const [x2string, y2string] = b!.split(',');
+    const [, x1s, y1s, x2s, y2s] = /(\d+),(\d+) -> (\d+),(\d+)/.exec(
+      input[i]!
+    )!;
 
-    const x1 = read10(x1string!);
-    const x2 = read10(x2string!);
-    const y1 = read10(y1string!);
-    const y2 = read10(y2string!);
+    const x1 = read10(x1s!);
+    const x2 = read10(x2s!);
+    const y1 = read10(y1s!);
+    const y2 = read10(y2s!);
 
     if (x1 === x2 || y1 === y2) {
       const dx = x1 - x2;
