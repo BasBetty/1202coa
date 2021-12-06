@@ -11,9 +11,7 @@ const solveA = (input: number[]): number => {
     fish[7] += fish[0];
     fish[9] = fish[0];
 
-    for (let j = 1; j < fish.length; j += 1) {
-      fish[j - 1] = fish[j];
-    }
+    for (let j = 1; j < fish.length; j += 1) fish[j - 1] = fish[j];
   }
 
   let n = 0;
