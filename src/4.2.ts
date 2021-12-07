@@ -1,31 +1,19 @@
-import { Maybe, Nothing } from './Maybe';
 import { read10 } from './readInt';
 import { readLines } from './readLines';
-import { sum } from './sum';
+import { transposeMatrix } from './transposeMatrix';
 
-const transposeM = <T>(rows: T[][]): T[][] => {
-  const columns: T[][] = [];
-
-  for (let i = 0; i < rows.length; i += 1) columns[i] = [];
-
-  for (let i = 0; i < rows.length; i += 1)
-    for (let j = 0; j < rows.length; j += 1) columns[j]![i] = rows[i]![j]!;
-
-  return columns;
-};
-
-const solveA = (input: string[]): Maybe<number> => {
+const solveA = (input: string[]): number => {
   const marked = input[0]?.split(',').map(read10);
   const boards: Set<number>[][] = [];
   let rows: number[][] = [];
-
-  const p = performance.now();
 
   for (let i = 2; i < input.length; i += 1) {
     if (i % 6 === 1) {
       boards.push([
         ...rows.map((row: number[]): Set<number> => new Set(row)),
-        ...transposeM(rows).map((row: number[]): Set<number> => new Set(row)),
+        ...transposeMatrix(rows).map(
+          (row: number[]): Set<number> => new Set(row)
+        ),
       ]);
 
       rows = [];
@@ -33,8 +21,6 @@ const solveA = (input: string[]): Maybe<number> => {
       rows.push(input[i]!.trim().split(/\s+/).map(read10));
     }
   }
-
-  console.log(performance.now() - p);
 
   const winners = new Set();
 
@@ -48,10 +34,13 @@ const solveA = (input: string[]): Maybe<number> => {
             if (winners.size + 1 === boards.length) {
               let x = 0;
 
-              for (let l = 0; l < boards[j]!.length / 2; l += 1)
-                x += sum([...boards[j]![l]!]);
+              for (let l = 0; l < boards[j]!.length / 2; l += 1) {
+                const board = [...boards[j]![l]!];
 
-              return { just: x * marked![i]! };
+                for (let m = 0; m < board.length; m += 1) x += board[m]!;
+              }
+
+              return x * marked![i]!;
             }
 
             winners.add(j);
@@ -61,7 +50,7 @@ const solveA = (input: string[]): Maybe<number> => {
     }
   }
 
-  return;
+  throw new Error('no solution found');
 };
 
 (async (): Promise<void> => {
@@ -71,7 +60,5 @@ const solveA = (input: string[]): Maybe<number> => {
   const solutionA = solveA(input);
   const endA = performance.now();
 
-  if (solutionA === Nothing) throw new Error('wtf');
-
-  console.log(`A: (${endA - startA}ms) ${solutionA.just}`);
+  console.log(`A: (${endA - startA}ms) ${solutionA}`);
 })();

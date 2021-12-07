@@ -1,5 +1,6 @@
 import { readFile } from 'fs/promises';
 
+import { minMax } from './minMax';
 import { read10 } from './readInt';
 
 const solveA = (input: number[]): number => {
@@ -19,19 +20,7 @@ const solveA = (input: number[]): number => {
 };
 
 const solveB = (input: number[]): number => {
-  let min = Number.MAX_SAFE_INTEGER;
-  let max = -Number.MAX_SAFE_INTEGER;
-
-  for (let i = 0; i < input.length; i += 1) {
-    const x = input[i]!;
-
-    if (x > max) {
-      max = x;
-    } else if (x < min) {
-      min = x;
-    }
-  }
-
+  const { min, max } = minMax(input);
   let answer = Number.MAX_SAFE_INTEGER;
 
   for (let i = min; i <= max; i += 1) {

@@ -1,5 +1,6 @@
 import { readFile } from 'fs/promises';
 
+import { minMax } from './minMax';
 import { read10 } from './readInt';
 
 const solveA = (input: number[]): number => {
@@ -20,18 +21,7 @@ const solveA = (input: number[]): number => {
 };
 
 const solveB = (input: number[]): number => {
-  let min = Number.MAX_SAFE_INTEGER;
-  let max = -Number.MAX_SAFE_INTEGER;
-
-  for (let i = 0; i < input.length; i += 1) {
-    const x = input[i]!;
-
-    if (x > max) {
-      max = x;
-    } else if (x < min) {
-      min = x;
-    }
-  }
+  const { min, max } = minMax(input);
 
   let answer = Number.MAX_SAFE_INTEGER;
 
@@ -48,23 +38,11 @@ const solveB = (input: number[]): number => {
 };
 
 const solveC = (input: number[]): number => {
-  let min = Number.MAX_SAFE_INTEGER;
-  let max = -Number.MAX_SAFE_INTEGER;
-
-  for (let i = 0; i < input.length; i += 1) {
-    const x = input[i]!;
-
-    if (x > max) {
-      max = x;
-    } else if (x < min) {
-      min = x;
-    }
-  }
-
+  const { min, max } = minMax(input);
   const d = max - min;
-  const facts = new Array(d).fill(0);
+  const factorials = new Array(d).fill(0);
 
-  for (let i = 0, acc = 0; i <= d; i += 1, acc += i) facts[i] += acc;
+  for (let i = 0, acc = 0; i <= d; i += 1, acc += i) factorials[i] += acc;
 
   let answer = Number.MAX_SAFE_INTEGER;
 
@@ -72,7 +50,7 @@ const solveC = (input: number[]): number => {
     let diff = 0;
 
     for (let j = 0; j < input.length; j += 1)
-      diff += facts[Math.abs(i - input[j]!)];
+      diff += factorials[Math.abs(i - input[j]!)];
 
     if (diff < answer) answer = diff;
   }
