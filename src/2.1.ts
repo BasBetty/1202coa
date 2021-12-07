@@ -1,4 +1,4 @@
-import { read10 } from './readInt';
+import { read10 } from './read10';
 import { readLines } from './readLines';
 
 interface V3 {

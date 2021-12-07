@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises';
 
-import { read10 } from './readInt';
+import { read10 } from './read10';
 
 const solveA = (input: number[]): number => {
   for (let i = 0; i < 80; i += 1) {

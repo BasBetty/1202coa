@@ -1,7 +1,7 @@
 import { readFile } from 'fs/promises';
 
 import { minMax } from './minMax';
-import { read10 } from './readInt';
+import { read10 } from './read10';
 
 const solveA = (input: number[]): number => {
   const min = Math.min(...input);
