@@ -52,5 +52,5 @@ const solveA = (input: string[]): number => {
   const solutionA = solveA(input);
   const endA = performance.now();
 
-  console.log(`A: (${endA - startA}ms) ${solutionA}`);
+  console.log(`(${endA - startA}ms) ${solutionA}`);
 })();

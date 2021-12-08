@@ -80,6 +80,29 @@ const solveD = (input: number[]): number => {
   return Math.min(sumFloor, sumCeil);
 };
 
+const solveE = (input: number[]): number => {
+  const { min, max } = minMax(input);
+  const d = max - min;
+  const factorials = nFactorials(d);
+  const sum = input.reduce((sum: number, x: number): number => sum + x);
+  const mean = sum / input.length;
+  const meanFloor = Math.floor(mean);
+  const meanCeil = Math.ceil(mean);
+
+  const { floor, ceil } = input.reduce(
+    (
+      { floor, ceil }: { floor: number; ceil: number },
+      x: number
+    ): { floor: number; ceil: number } => ({
+      floor: floor + factorials[Math.abs(meanFloor - x)]!,
+      ceil: ceil + factorials[Math.abs(meanCeil - x)]!,
+    }),
+    { floor: 0, ceil: 0 }
+  );
+
+  return Math.min(floor, ceil);
+};
+
 (async (): Promise<void> => {
   const input = await readFile('./input/7', { encoding: 'utf-8' });
   const positions = input.split(',').map(read10);
@@ -107,4 +130,10 @@ const solveD = (input: number[]): number => {
   const endD = performance.now();
 
   console.log(`D: (${endD - startD}ms) ${solutionD}`);
+
+  const startE = performance.now();
+  const solutionE = solveE(positions);
+  const endE = performance.now();
+
+  console.log(`E: (${endE - startE}ms) ${solutionE}`);
 })();

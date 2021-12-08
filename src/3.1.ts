@@ -1,6 +1,6 @@
 import { readLines } from './readLines';
 
-const solveA = (input: string[]): number => {
+const solve = (input: string[]): number => {
   const n = input.length;
   const m = input[0]!.length;
   const n2 = n / 2;
@@ -28,9 +28,9 @@ const solveA = (input: string[]): number => {
 (async (): Promise<void> => {
   const input = await readLines('./input/3');
 
-  const startA = performance.now();
-  const solutionA = solveA(input);
-  const endA = performance.now();
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
 
-  console.log(`A: (${endA - startA}ms) ${solutionA}`);
+  console.log(`(${end - start}ms) ${solution}`);
 })();

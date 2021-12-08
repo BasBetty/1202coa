@@ -29,7 +29,7 @@ import { readFile } from 'fs/promises';
 type Segment = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g';
 type SegmentMap<T> = { [K in Segment]?: T };
 
-const segmentsToDigit = new Map([
+const digits = new Map([
   ['abcefg', '0'],
   ['cf', '1'],
   ['acdeg', '2'],
@@ -44,20 +44,20 @@ const segmentsToDigit = new Map([
 
 const solveA = (input: string): number => {
   const entries = input.split('\n');
+  const count: SegmentMap<number> = {};
 
   let sum = 0;
 
   for (let i = 0; i < entries.length; i += 1) {
+    for (let j = 0; j < 7; j += 1) count['abcdefg'[j] as Segment] = 0;
+
     const [rawPatterns, rawOutputs] = entries[i]!.split(' | ');
     const patterns = rawPatterns!.split(' ');
     const outputs = rawOutputs!.split(' ');
-    const count: SegmentMap<number> = {};
     const segments: SegmentMap<Segment> = {};
 
     let one: string;
     let four: string;
-
-    for (let j = 0; j < 7; j += 1) count['abcdefg'[j] as Segment] = 0;
 
     for (let j = 0; j < patterns.length; j += 1) {
       const pattern = patterns[j]!;
@@ -93,10 +93,67 @@ const solveA = (input: string): number => {
         s.push(segments[outputs[j]![k] as Segment]!);
 
       sum +=
-        parseInt(segmentsToDigit.get(s.sort().join(''))!, 10) *
+        parseInt(digits.get(s.sort().join(''))!, 10) *
         10 ** (outputs.length - j - 1);
     }
   }
+
+  return sum;
+};
+
+const solveB = (input: string): number => {
+  const entries = input.split('\n');
+  const count: SegmentMap<number> = {};
+  let sum = 0;
+
+  entries.forEach((entry: string): void => {
+    [...'abcdefg'].forEach((x: string): void => {
+      count[x as Segment] = 0;
+    });
+
+    const [rawPatterns, rawOutputs] = entry.split(' | ');
+    const patterns = rawPatterns!.split(' ');
+    const outputs = rawOutputs!.split(' ');
+    const segments: SegmentMap<Segment> = {};
+
+    let one: string;
+    let four: string;
+
+    patterns.forEach((pattern: string): void => {
+      if (pattern.length === 2) {
+        one = pattern;
+      } else if (pattern.length === 4) {
+        four = pattern;
+      }
+
+      [...pattern].forEach((segment: string): void => {
+        count[segment as Segment] = (count[segment as Segment] ?? 0) + 1;
+      });
+    });
+
+    for (const [segment, n] of Object.entries(count)) {
+      if (n === 4) {
+        segments[segment as Segment] = 'e';
+      } else if (n === 6) {
+        segments[segment as Segment] = 'b';
+      } else if (n === 7) {
+        segments[segment as Segment] = four!.includes(segment) ? 'd' : 'g';
+      } else if (n === 8) {
+        segments[segment as Segment] = one!.includes(segment) ? 'c' : 'a';
+      } else if (n === 9) {
+        segments[segment as Segment] = 'f';
+      }
+    }
+
+    outputs.forEach((output: string, i: number): void => {
+      const digit = [...output]
+        .map((x: string): Segment => segments[x as Segment]!)
+        .sort()
+        .join('');
+
+      sum += parseInt(digits.get(digit)!, 10) * 10 ** (outputs.length - i - 1);
+    });
+  });
 
   return sum;
 };
@@ -109,4 +166,10 @@ const solveA = (input: string): number => {
   const endA = performance.now();
 
   console.log(`A: (${endA - startA}ms) ${solutionA}`);
+
+  const startB = performance.now();
+  const solutionB = solveB(input);
+  const endB = performance.now();
+
+  console.log(`B: (${endB - startB}ms) ${solutionB}`);
 })();

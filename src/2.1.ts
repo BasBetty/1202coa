@@ -7,7 +7,7 @@ interface V3 {
   z: number;
 }
 
-const solveA = (input: string[]): number => {
+const solve = (input: string[]): number => {
   const { x, z } = input.reduce(
     ({ x, y, z }: V3, rawInstruction: string): V3 => {
       const [, direction, rawValue] = /(\w+) (\d+)/.exec(rawInstruction)!;
@@ -28,9 +28,9 @@ const solveA = (input: string[]): number => {
 (async (): Promise<void> => {
   const input = await readLines('./input/2');
 
-  const startA = performance.now();
-  const solutionA = solveA(input);
-  const endA = performance.now();
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
 
-  console.log(`A: (${endA - startA}ms) ${solutionA}`);
+  console.log(`(${end - start}ms) ${solution}`);
 })();

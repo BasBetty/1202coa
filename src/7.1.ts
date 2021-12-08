@@ -34,6 +34,23 @@ const solveB = (input: number[]): number => {
   return answer;
 };
 
+const solveC = (input: number[]): number => {
+  const { min, max } = minMax(input);
+  let answer = Number.MAX_SAFE_INTEGER;
+
+  for (let i = min; i <= max; i += 1) {
+    // slower
+    const diff = input.reduce(
+      (d: number, x: number): number => d + Math.abs(i - x),
+      0
+    );
+
+    if (diff < answer) answer = diff;
+  }
+
+  return answer;
+};
+
 (async (): Promise<void> => {
   const input = await readFile('./input/7', { encoding: 'utf-8' });
   const positions = input.split(',').map(read10);
@@ -42,11 +59,17 @@ const solveB = (input: number[]): number => {
   const solutionA = solveA(positions);
   const endA = performance.now();
 
-  console.log(`A: (${endA - startA}ms) ${solutionA}`);
+  console.log(`(${endA - startA}ms) ${solutionA}`);
 
   const startB = performance.now();
   const solutionB = solveB(positions);
   const endB = performance.now();
 
-  console.log(`B: (${endB - startB}ms) ${solutionB}`);
+  console.log(`(${endB - startB}ms) ${solutionB}`);
+
+  const startC = performance.now();
+  const solutionC = solveC(positions);
+  const endC = performance.now();
+
+  console.log(`(${endC - startC}ms) ${solutionC}`);
 })();

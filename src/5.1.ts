@@ -1,7 +1,7 @@
 import { read10 } from './read10';
 import { readLines } from './readLines';
 
-const solveA = (input: string[]): number => {
+const solve = (input: string[]): number => {
   const points = new Map<string, number>();
 
   for (let i = 0; i < input.length; i += 1) {
@@ -43,9 +43,9 @@ const solveA = (input: string[]): number => {
 (async (): Promise<void> => {
   const input = await readLines('./input/5');
 
-  const startA = performance.now();
-  const solutionA = solveA(input);
-  const endA = performance.now();
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
 
-  console.log(`A: (${endA - startA}ms) ${solutionA}`);
+  console.log(`(${end - start}ms) ${solution}`);
 })();
