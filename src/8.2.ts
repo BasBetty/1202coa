@@ -54,8 +54,8 @@ const solveA = (input: string): number => {
     const count: SegmentMap<number> = {};
     const segments: SegmentMap<Segment> = {};
 
-    let one: Set<string>;
-    let four: Set<string>;
+    let one: string;
+    let four: string;
 
     for (let j = 0; j < 7; j += 1) count['abcdefg'[j] as Segment] = 0;
 
@@ -63,9 +63,9 @@ const solveA = (input: string): number => {
       const pattern = patterns[j]!;
 
       if (pattern.length === 2) {
-        one = new Set(pattern);
+        one = pattern;
       } else if (pattern.length === 4) {
-        four = new Set(pattern);
+        four = pattern;
       }
 
       for (let k = 0; k < pattern.length; k += 1)
@@ -78,9 +78,9 @@ const solveA = (input: string): number => {
       } else if (n === 6) {
         segments[segment as Segment] = 'b';
       } else if (n === 7) {
-        segments[segment as Segment] = four!.has(segment) ? 'd' : 'g';
+        segments[segment as Segment] = four!.includes(segment) ? 'd' : 'g';
       } else if (n === 8) {
-        segments[segment as Segment] = one!.has(segment) ? 'c' : 'a';
+        segments[segment as Segment] = one!.includes(segment) ? 'c' : 'a';
       } else if (n === 9) {
         segments[segment as Segment] = 'f';
       }
