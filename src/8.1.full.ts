@@ -16,5 +16,11 @@ const solveA = (input: string): number => {
 };
 
 (async (): Promise<void> => {
-  console.log(solveA(await readFile('./input/8', { encoding: 'utf-8' })));
+  const input = await readFile('./input/8', { encoding: 'utf-8' });
+
+  const startA = performance.now();
+  const solutionA = solveA(input);
+  const endA = performance.now();
+
+  console.log(`A: (${endA - startA}ms) ${solutionA}`);
 })();

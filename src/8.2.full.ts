@@ -1,3 +1,29 @@
+/*
+
+ aaaa            aaaa    aaaa           aaaa    aaaa    aaaa    aaaa    aaaa 
+b    c       c       c       c  b    c b       b            c  b    c  b    c
+b    c       c       c       c  b    c b       b            c  b    c  b    c
+                 dddd    dddd    dddd   dddd    dddd            dddd    dddd
+e    f       f  e            f       f      f  e    f       f  e    f       f
+e    f       f  e            f       f      f  e    f       f  e    f       f
+ gggg            gggg    gggg           gggg    gggg            gggg    gggg
+
+a 8
+b 6
+c 8
+d 7
+e 4
+f 9
+g 7
+
+4 -> segment e
+6 -> segment b
+7 -> segment d or g
+8 -> segment a or c
+9 -> segment f
+
+*/
+
 import { readFile } from 'fs/promises';
 
 type Segment = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g';
@@ -18,6 +44,7 @@ const segmentsToDigit = new Map([
 
 const solveA = (input: string): number => {
   const entries = input.split('\n');
+
   let sum = 0;
 
   for (let i = 0; i < entries.length; i += 1) {
@@ -75,5 +102,11 @@ const solveA = (input: string): number => {
 };
 
 (async (): Promise<void> => {
-  console.log(solveA(await readFile('./input/8', { encoding: 'utf-8' })));
+  const input = await readFile('./input/8', { encoding: 'utf-8' });
+
+  const startA = performance.now();
+  const solutionA = solveA(input);
+  const endA = performance.now();
+
+  console.log(`A: (${endA - startA}ms) ${solutionA}`);
 })();
