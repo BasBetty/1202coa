@@ -2,7 +2,7 @@ import { read10 } from './read10';
 import { readLines } from './readLines';
 import { transposeMatrix } from './transposeMatrix';
 
-const solveA = (input: string[]): number => {
+const solve = (input: string[]): number => {
   const marked = input[0]?.split(',').map(read10);
   const boards: Set<number>[][] = [];
   let rows: number[][] = [];
@@ -48,9 +48,9 @@ const solveA = (input: string[]): number => {
 (async (): Promise<void> => {
   const input = await readLines('./input/4');
 
-  const startA = performance.now();
-  const solutionA = solveA(input);
-  const endA = performance.now();
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
 
-  console.log(`(${endA - startA}ms) ${solutionA}`);
+  console.log(`(${end - start}ms) ${solution}`);
 })();
