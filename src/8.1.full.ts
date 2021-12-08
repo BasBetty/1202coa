@@ -15,6 +15,17 @@ const solveA = (input: string): number => {
   return sum;
 };
 
+const solveB = (input: string): number =>
+  input.split('\n').reduce(
+    (sum: number, entry: string): number =>
+      sum +
+      entry
+        .split(' | ')[1]!
+        .split(' ')
+        .filter((x: string): boolean => [2, 3, 4, 7].includes(x.length)).length,
+    0
+  );
+
 (async (): Promise<void> => {
   const input = await readFile('./input/8', { encoding: 'utf-8' });
 
@@ -23,4 +34,10 @@ const solveA = (input: string): number => {
   const endA = performance.now();
 
   console.log(`A: (${endA - startA}ms) ${solutionA}`);
+
+  const startB = performance.now();
+  const solutionB = solveB(input);
+  const endB = performance.now();
+
+  console.log(`B: (${endB - startB}ms) ${solutionB}`);
 })();
