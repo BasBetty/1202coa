@@ -18,7 +18,7 @@ const solve = (input: number[]): number => {
 };
 
 (async (): Promise<void> => {
-  const input = await readFile('./input/6', { encoding: 'utf-8' });
+  const input = await readFile('./input/6', 'utf-8');
   const fish = input.split(',').map(read10);
 
   const start = performance.now();

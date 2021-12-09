@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises';
 
-const solveA = (input: string): number => {
+const solve = (input: string): number => {
   const entries = input.split('\n');
   let sum = 0;
 
@@ -16,5 +16,5 @@ const solveA = (input: string): number => {
 };
 
 (async (): Promise<void> => {
-  console.log(solveA(await readFile('./input/8', { encoding: 'utf-8' })));
+  console.log(solve(await readFile('./input/8', 'utf-8')));
 })();

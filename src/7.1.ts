@@ -52,7 +52,7 @@ const solveC = (input: number[]): number => {
 };
 
 (async (): Promise<void> => {
-  const input = await readFile('./input/7', { encoding: 'utf-8' });
+  const input = await readFile('./input/7', 'utf-8');
   const positions = input.split(',').map(read10);
 
   const startA = performance.now();

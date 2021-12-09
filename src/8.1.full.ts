@@ -27,7 +27,7 @@ const solveB = (input: string): number =>
   );
 
 (async (): Promise<void> => {
-  const input = await readFile('./input/8', { encoding: 'utf-8' });
+  const input = await readFile('./input/8', 'utf-8');
 
   const startA = performance.now();
   const solutionA = solveA(input);

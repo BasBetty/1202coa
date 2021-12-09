@@ -75,5 +75,5 @@ const solveA = (input: string): number => {
 };
 
 (async (): Promise<void> => {
-  console.log(solveA(await readFile('./input/8', { encoding: 'utf-8' })));
+  console.log(solveA(await readFile('./input/8', 'utf-8')));
 })();
