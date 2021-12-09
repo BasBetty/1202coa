@@ -9,24 +9,23 @@ const solve = (input: string): number => {
     .map((line: string): number[] => [...line].map(read10));
 
   const nX = rows[0]!.length;
-  const nY = rows.length;
 
-  let sum = 0;
-
-  rows.forEach((row: number[], y: number): void => {
-    row.forEach((height: number, x: number): void => {
-      if (
-        (x === 0 || row![x - 1]! > height) &&
-        (x > nX - 2 || row![x + 1]! > height) &&
-        (y === 0 || rows[y - 1]![x]! > height) &&
-        (y > nY - 2 || rows[y + 1]![x]! > height)
-      ) {
-        sum += height + 1;
-      }
-    });
-  });
-
-  return sum;
+  return rows.reduce(
+    (sum: number, row: number[], y: number): number =>
+      sum +
+      row.reduce(
+        (rowSum: number, height: number, x: number): number =>
+          rowSum +
+          ((x === 0 || row![x - 1]! > height) &&
+          (x > nX - 2 || row![x + 1]! > height) &&
+          (y === 0 || rows[y - 1]![x]! > height) &&
+          (y > rows.length - 2 || rows[y + 1]![x]! > height)
+            ? height + 1
+            : 0),
+        0
+      ),
+    0
+  );
 };
 
 (async (): Promise<void> => {
