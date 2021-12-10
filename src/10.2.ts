@@ -22,11 +22,9 @@ const solve = (input: string): number => {
           '<': '>',
         }[open[open.length - 1]!];
 
-        if (char === expected) {
-          open.pop();
-        } else {
-          return scores;
-        }
+        if (char !== expected) return scores;
+
+        open.pop();
       }
     }
 
@@ -46,8 +44,6 @@ const solve = (input: string): number => {
 
     return scores;
   }, []);
-
-  console.log(scores);
 
   return scores.sort((a: number, b: number): number => a - b)[
     Math.round(scores.length / 2 - 1)
