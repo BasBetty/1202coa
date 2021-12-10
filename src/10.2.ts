@@ -15,12 +15,9 @@ const solve = (input: string): number => {
       if ('([{<'.includes(char)) {
         open.push(char);
       } else {
-        const expected = {
-          '(': ')',
-          '[': ']',
-          '{': '}',
-          '<': '>',
-        }[open[open.length - 1]!];
+        const expected = { '(': ')', '[': ']', '{': '}', '<': '>' }[
+          open[open.length - 1]!
+        ];
 
         if (char !== expected) return scores;
 
@@ -29,17 +26,12 @@ const solve = (input: string): number => {
     }
 
     scores.push(
-      open.reverse().reduce(
-        (lineScore: number, char: string): number =>
-          lineScore * 5 +
-          {
-            '(': 1,
-            '[': 2,
-            '{': 3,
-            '<': 4,
-          }[char]!,
-        0
-      )
+      open
+        .reverse()
+        .reduce(
+          (x: number, char: string): number => x * 5 + '([{<'.indexOf(char) + 1,
+          0
+        )
     );
 
     return scores;

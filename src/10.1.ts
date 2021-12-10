@@ -15,25 +15,14 @@ const solve = (input: string): number => {
       if ('([{<'.includes(char)) {
         open.push(char);
       } else {
-        const expected = {
-          '(': ')',
-          '[': ']',
-          '{': '}',
-          '<': '>',
-        }[open[open.length - 1]!];
+        const expected = { '(': ')', '[': ']', '{': '}', '<': '>' }[
+          open[open.length - 1]!
+        ];
 
         if (char === expected) {
           open.pop();
         } else {
-          return (
-            score +
-            {
-              ')': 3,
-              ']': 57,
-              '}': 1197,
-              '>': 25137,
-            }[char]!
-          );
+          return score + { ')': 3, ']': 57, '}': 1197, '>': 25137 }[char]!;
         }
       }
     }
