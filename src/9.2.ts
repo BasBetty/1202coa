@@ -46,5 +46,11 @@ const solve = (input: string): number => {
 };
 
 (async (): Promise<void> => {
-  console.log(solve(await readFile('./input/9', 'utf-8')));
+  const input = await readFile('./input/9', 'utf-8');
+
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();
