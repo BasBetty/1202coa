@@ -1,16 +1,10 @@
 // see also: ./full/9.2.full.ts
-import { readFile } from 'fs/promises';
-
 import { read10 } from './read10';
+import { readLines } from './readLines';
 
 (async (): Promise<void> => {
-  const input = await readFile('./input/9', 'utf-8');
-
-  const rows = input
-    .trim()
-    .split('\n')
-    .map((line: string): number[] => [...line].map(read10));
-
+  const input = await readLines('./input/9');
+  const rows = input.map((line: string): number[] => [...line].map(read10));
   const nX = rows[0]!.length;
   const nY = rows.length;
   const visited = new Set();

@@ -1,13 +1,8 @@
-import { readFile } from 'fs/promises';
-
 import { read10 } from '../read10';
+import { readLines } from '../readLines';
 
-const solve = (input: string): number => {
-  const rows = input
-    .trim()
-    .split('\n')
-    .map((line: string): number[] => [...line].map(read10));
-
+const solve = (input: string[]): number => {
+  const rows = input.map((line: string): number[] => [...line].map(read10));
   const nX = rows[0]!.length;
 
   return rows.reduce(
@@ -29,7 +24,7 @@ const solve = (input: string): number => {
 };
 
 (async (): Promise<void> => {
-  const input = await readFile('./input/9', 'utf-8');
+  const input = await readLines('./input/9');
 
   const start = performance.now();
   const solution = solve(input);

@@ -1,9 +1,7 @@
-import { readFile } from 'fs/promises';
+import { readLines } from '../readLines';
 
-const solveA = (input: string): number => {
-  const lines = input.trim().split('\n');
-
-  return lines.reduce((score: number, line: string): number => {
+const solveA = (input: string[]): number =>
+  input.reduce((score: number, line: string): number => {
     const open = [];
 
     for (let i = 0; i < line.length; i += 1) {
@@ -26,9 +24,8 @@ const solveA = (input: string): number => {
 
     return score;
   }, 0);
-};
 
-const solveB = (input: string): number => {
+const solveB = (input: string[]): number => {
   const pairs: Record<string, string> = {
     '(': ')',
     '[': ']',
@@ -44,10 +41,9 @@ const solveB = (input: string): number => {
   };
 
   const openers = '([{<';
-  const lines = input.trim().split('\n');
   let score = 0;
 
-  lines.forEach((line: string): void => {
+  input.forEach((line: string): void => {
     const open = [];
 
     for (let i = 0; i < line.length; i += 1) {
@@ -72,17 +68,17 @@ const solveB = (input: string): number => {
 };
 
 (async (): Promise<void> => {
-  const input = await readFile('./input/10', 'utf-8');
+  const input = await readLines('./input/10');
 
   const start = performance.now();
   const solution = solveA(input);
   const end = performance.now();
 
-  console.log(`(${end - start}ms) ${solution}`);
+  console.log(`A: (${end - start}ms) ${solution}`);
 
   const startB = performance.now();
   const solutionB = solveB(input);
   const endB = performance.now();
 
-  console.log(`(${endB - startB}ms) ${solutionB}`);
+  console.log(`B: (${endB - startB}ms) ${solutionB}`);
 })();

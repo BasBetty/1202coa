@@ -1,10 +1,9 @@
-// see also: ./full/11.1.full.ts
-import { read10 } from './read10';
-import { readLines } from './readLines';
+import { read10 } from '../read10';
+import { readLines } from '../readLines';
 
-(async (): Promise<void> => {
-  const input = await readLines('./input/11');
+const solve = (input: string[]): number => {
   const levels = input.map((line: string): number[] => [...line].map(read10));
+
   const nX = levels[0]!.length;
   const nY = levels.length;
   const maxX = nX - 1;
@@ -64,5 +63,15 @@ import { readLines } from './readLines';
     }
   }
 
-  console.log(sum);
+  return sum;
+};
+
+(async (): Promise<void> => {
+  const input = await readLines('./input/11');
+
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();

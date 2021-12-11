@@ -1,15 +1,9 @@
-import { readFile } from 'fs/promises';
-
 import { read10 } from './read10';
+import { readLines } from './readLines';
 
 (async (): Promise<void> => {
-  const input = await readFile('./input/11', 'utf-8');
-
-  const levels = input
-    .trim()
-    .split('\n')
-    .map((line: string): number[] => [...line].map(read10));
-
+  const input = await readLines('./input/11');
+  const levels = input.map((line: string): number[] => [...line].map(read10));
   const nX = levels[0]!.length;
   const nY = levels.length;
   const maxX = nX - 1;
@@ -22,7 +16,6 @@ import { read10 } from './read10';
   };
 
   for (let i = 0; ; i += 1) {
-    // initial increase
     for (let x = 0; x < nX; x += 1)
       for (let y = 0; y < nY; y += 1) levels[y]![x]! += 1;
 

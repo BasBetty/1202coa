@@ -1,15 +1,12 @@
-// see also: ./full/11.1.full.ts
-import { read10 } from './read10';
-import { readLines } from './readLines';
+import { read10 } from '../read10';
+import { readLines } from '../readLines';
 
-(async (): Promise<void> => {
-  const input = await readLines('./input/11');
+const solve = (input: string[]): number => {
   const levels = input.map((line: string): number[] => [...line].map(read10));
   const nX = levels[0]!.length;
   const nY = levels.length;
   const maxX = nX - 1;
   const maxY = nY - 1;
-  let sum = 0;
 
   const increase = (x: number, y: number): void => {
     const level = levels[y]![x]!;
@@ -17,7 +14,7 @@ import { readLines } from './readLines';
     if (![0, 10].includes(level)) levels[y]![x]! += 1;
   };
 
-  for (let i = 0; i < 100; i += 1) {
+  for (let i = 0; ; i += 1) {
     for (let x = 0; x < nX; x += 1)
       for (let y = 0; y < nY; y += 1) levels[y]![x]! += 1;
 
@@ -59,10 +56,18 @@ import { readLines } from './readLines';
           }
         }
       }
-
-      sum += flashes;
     }
-  }
 
-  console.log(sum);
+    if (new Set(levels.flat()).size === 1) return i + 1;
+  }
+};
+
+(async (): Promise<void> => {
+  const input = await readLines('./input/11');
+
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();

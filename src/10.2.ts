@@ -1,11 +1,10 @@
 // see also: ./full/10.2.full.ts
-import { readFile } from 'fs/promises';
+import { readLines } from './readLines';
 
 (async (): Promise<void> => {
-  const input = await readFile('./input/10', 'utf-8');
-  const lines = input.trim().split('\n');
+  const input = await readLines('./input/10');
 
-  const scores = lines.reduce((scores: number[], line: string): number[] => {
+  const scores = input.reduce((scores: number[], line: string): number[] => {
     const open = [];
 
     for (let i = 0; i < line.length; i += 1) {
