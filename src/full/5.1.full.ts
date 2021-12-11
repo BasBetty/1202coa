@@ -1,9 +1,7 @@
-// see also: ./full/5.1.full.ts
-import { read10 } from './read10';
-import { readLines } from './readLines';
+import { read10 } from '../read10';
+import { readLines } from '../readLines';
 
-(async (): Promise<void> => {
-  const input = await readLines('./input/5');
+const solve = (input: string[]): number => {
   const points = new Map<string, number>();
 
   for (let i = 0; i < input.length; i += 1) {
@@ -33,9 +31,21 @@ import { readLines } from './readLines';
     }
   }
 
-  console.log(
-    [...points.values()].reduce((sum: number, x: number): number =>
-      sum + x >= 2 ? 1 : 0
-    )
-  );
+  let n = 0;
+
+  const values = [...points.values()];
+
+  for (let i = 0; i < points.size; i += 1) if (values[i]! >= 2) n += 1;
+
+  return n;
+};
+
+(async (): Promise<void> => {
+  const input = await readLines('./input/5');
+
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();

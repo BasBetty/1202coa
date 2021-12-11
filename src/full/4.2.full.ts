@@ -1,10 +1,8 @@
-// see also: ./full/4.2.full.ts
-import { read10 } from './read10';
-import { readLines } from './readLines';
-import { transposeMatrix } from './transposeMatrix';
+import { read10 } from '../read10';
+import { readLines } from '../readLines';
+import { transposeMatrix } from '../transposeMatrix';
 
-(async (): Promise<void> => {
-  const input = await readLines('./input/4');
+const solve = (input: string[]): number => {
   const marked = input[0]?.split(',').map(read10);
   const boards: Set<number>[][] = [];
   let rows: number[][] = [];
@@ -42,8 +40,7 @@ import { transposeMatrix } from './transposeMatrix';
                 for (let m = 0; m < board.length; m += 1) x += board[m]!;
               }
 
-              console.log(x * marked![i]!);
-              return;
+              return x * marked![i]!;
             }
 
             winners.add(j);
@@ -52,4 +49,16 @@ import { transposeMatrix } from './transposeMatrix';
       }
     }
   }
+
+  throw new Error('no solution found');
+};
+
+(async (): Promise<void> => {
+  const input = await readLines('./input/4');
+
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();

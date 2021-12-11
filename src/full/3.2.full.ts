@@ -1,5 +1,4 @@
-// see also: ./full/3.2.full.ts
-import { readLines } from './readLines';
+import { readLines } from '../readLines';
 
 const column = (input: string[], j: number): number => {
   let column = 0;
@@ -10,9 +9,9 @@ const column = (input: string[], j: number): number => {
   return column;
 };
 
-(async (): Promise<void> => {
-  const input = await readLines('./input/3');
+const solve = (input: string[]): number => {
   const m = input[0]!.length;
+
   let o2s = input;
   let co2s = input;
 
@@ -37,5 +36,15 @@ const column = (input: string[], j: number): number => {
     if (co2s[0]![i] === '1') co2 += x;
   }
 
-  console.log(o2 * co2);
+  return o2 * co2;
+};
+
+(async (): Promise<void> => {
+  const input = await readLines('./input/3');
+
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();

@@ -1,11 +1,8 @@
-// see also: ./full/9.2.full.ts
 import { readFile } from 'fs/promises';
 
-import { read10 } from './read10';
+import { read10 } from '../read10';
 
-(async (): Promise<void> => {
-  const input = await readFile('./input/9', 'utf-8');
-
+const solve = (input: string): number => {
   const rows = input
     .trim()
     .split('\n')
@@ -45,5 +42,15 @@ import { read10 } from './read10';
     )
     .sort((a: number, b: number): number => b - a);
 
-  console.log(a! * b! * c!);
+  return a! * b! * c!;
+};
+
+(async (): Promise<void> => {
+  const input = await readFile('./input/9', 'utf-8');
+
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();

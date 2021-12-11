@@ -1,25 +1,9 @@
+// see also: ./full/1.1.full.ts
 import { read10 } from './read10';
 import { readLines } from './readLines';
 
-interface Counter {
-  increases: number;
-  previousDepth: number;
-}
-
-const solveA = (input: string[]): number =>
-  input.reduce(
-    ({ increases, previousDepth }: Counter, rawDepth: string): Counter => {
-      const depth = read10(rawDepth);
-
-      return {
-        increases: depth > previousDepth ? increases + 1 : increases,
-        previousDepth: depth,
-      };
-    },
-    { increases: -1, previousDepth: 0 }
-  ).increases;
-
-const solveB = (input: string[]): number => {
+(async (): Promise<void> => {
+  const input = await readLines('./input/1');
   let increases = 0;
   let depth = read10(input[0]!);
 
@@ -31,21 +15,5 @@ const solveB = (input: string[]): number => {
     depth = nextDepth;
   }
 
-  return increases;
-};
-
-(async (): Promise<void> => {
-  const input = await readLines('./input/1');
-
-  const startA = performance.now();
-  const solutionA = solveA(input);
-  const endA = performance.now();
-
-  console.log(`A: (${endA - startA}ms) ${solutionA}`);
-
-  const startB = performance.now();
-  const solutionB = solveB(input);
-  const endB = performance.now();
-
-  console.log(`A: (${endB - startB}ms) ${solutionB}`);
+  console.log(increases);
 })();

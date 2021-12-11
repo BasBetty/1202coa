@@ -1,8 +1,6 @@
-// see also: ./full/3.1.full.ts
-import { readLines } from './readLines';
+import { readLines } from '../readLines';
 
-(async (): Promise<void> => {
-  const input = await readLines('./input/3');
+const solve = (input: string[]): number => {
   const n = input.length;
   const m = input[0]!.length;
   const n2 = n / 2;
@@ -24,5 +22,15 @@ import { readLines } from './readLines';
     }
   }
 
-  console.log(gamma * epsilon);
+  return gamma * epsilon;
+};
+
+(async (): Promise<void> => {
+  const input = await readLines('./input/3');
+
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();

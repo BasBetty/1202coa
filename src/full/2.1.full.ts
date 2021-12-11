@@ -1,6 +1,5 @@
-// see also: ./full/2.1.full.ts
-import { read10 } from './read10';
-import { readLines } from './readLines';
+import { read10 } from '../read10';
+import { readLines } from '../readLines';
 
 interface V3 {
   x: number;
@@ -8,9 +7,7 @@ interface V3 {
   z: number;
 }
 
-(async (): Promise<void> => {
-  const input = await readLines('./input/2');
-
+const solve = (input: string[]): number => {
   const { x, z } = input.reduce(
     ({ x, y, z }: V3, rawInstruction: string): V3 => {
       const [, direction, rawValue] = /(\w+) (\d+)/.exec(rawInstruction)!;
@@ -25,5 +22,15 @@ interface V3 {
     { x: 0, y: 0, z: 0 }
   );
 
-  console.log(x * z);
+  return x * z;
+};
+
+(async (): Promise<void> => {
+  const input = await readLines('./input/2');
+
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();
