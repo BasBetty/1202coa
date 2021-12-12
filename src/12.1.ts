@@ -27,9 +27,7 @@ import { readLines } from './readLines';
 
     if (isLower) newOnce.add(cave);
 
-    map
-      .get(cave)!
-      .forEach((next: string): void => follow(next, newOnce, [...path, cave]));
+    for (const next of map.get(cave)!) follow(next, newOnce, [...path, cave]);
   };
 
   follow('start', new Set(), []);
