@@ -13,24 +13,23 @@ import { readLines } from './readLines';
 
   const paths = new Set();
 
-  const follow = (cave: string, visited: Set<string>, path: string[]): void => {
+  const follow = (cave: string, once: Set<string>, path: string[]): void => {
     if (cave === 'end') {
       paths.add(path.join(' '));
       return;
     }
 
-    const isLower = cave.toLowerCase() === cave;
+    const isLower = cave === cave.toLowerCase();
 
-    if (visited.has(cave) && isLower) return;
+    if (once.has(cave) && isLower) return;
 
-    const newVisited = new Set(visited);
-    const newPath = [...path, cave];
+    const newOnce = new Set(once).add(cave);
 
-    if (isLower) newVisited.add(cave);
+    if (isLower) newOnce.add(cave);
 
     map
       .get(cave)!
-      .forEach((next: string): void => follow(next, newVisited, newPath));
+      .forEach((next: string): void => follow(next, newOnce, [...path, cave]));
   };
 
   follow('start', new Set(), []);

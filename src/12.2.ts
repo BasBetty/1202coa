@@ -24,19 +24,20 @@ import { readLines } from './readLines';
       return;
     }
 
-    if ((path.length > 0 && cave === 'start') || (twice && once.has(cave)))
-      return;
+    const seen = once.has(cave);
 
-    if (once.has(cave)) twice = true;
+    if ((path.length !== 0 && cave === 'start') || (twice && seen)) return;
+    if (seen) twice = true;
 
-    const newPath = [...path, cave];
     const newOnce = new Set(once);
 
     if (cave.toLowerCase() === cave) newOnce.add(cave);
 
     map
       .get(cave)!
-      .forEach((next: string): void => follow(next, newOnce, twice, newPath));
+      .forEach((next: string): void =>
+        follow(next, newOnce, twice, [...path, cave])
+      );
   };
 
   follow('start', new Set(), false, []);
