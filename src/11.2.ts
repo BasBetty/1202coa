@@ -1,3 +1,4 @@
+// see also: ./full/11.2.full.ts
 import { read10 } from './read10';
 import { readLines } from './readLines';
 
