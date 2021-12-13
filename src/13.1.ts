@@ -30,27 +30,23 @@ const sheetSize = (
     sheet.set(x, (sheet.get(x) ?? new Set()).add(y));
   });
 
-  foldBlock!.split('\n').forEach((line: string): void => {
-    const [, axis, valueRaw] = /fold along (x|y)=(\d+)/.exec(line)!;
-    const fold = read10(valueRaw!);
-    const { width, height } = sheetSize(sheet);
+  const line = foldBlock!.split('\n')[0]!;
+  const [, axis, valueRaw] = /fold along (x|y)=(\d+)/.exec(line)!;
+  const fold = read10(valueRaw!);
+  const { width, height } = sheetSize(sheet);
 
-    for (const [x, ys] of sheet) {
-      for (const y of ys) {
-        if (axis === 'x' && x > fold) {
-          const newX = width - 1 - x;
-          folded.set(newX, (folded.get(newX) ?? new Set()).add(y));
-        } else if (axis === 'y' && y > fold) {
-          folded.set(x, (folded.get(x) ?? new Set()).add(height - 1 - y));
-        } else {
-          folded.set(x, (folded.get(x) ?? new Set()).add(y));
-        }
+  for (const [x, ys] of sheet) {
+    for (const y of ys) {
+      if (axis === 'x' && x > fold) {
+        const newX = width - 1 - x;
+        folded.set(newX, (folded.get(newX) ?? new Set()).add(y));
+      } else if (axis === 'y' && y > fold) {
+        folded.set(x, (folded.get(x) ?? new Set()).add(height - 1 - y));
+      } else {
+        folded.set(x, (folded.get(x) ?? new Set()).add(y));
       }
     }
-
-    sheet = folded;
-    folded = new Map();
-  });
+  }
 
   let n = 0;
 
