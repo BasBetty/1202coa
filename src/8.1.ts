@@ -1,11 +1,11 @@
 // see also: ./full/8.1.full.ts
-import { readFile } from 'fs/promises';
+import { readLines } from './readLines';
 
 (async (): Promise<void> => {
-  const input = await readFile('./input/8', 'utf-8');
+  const input = await readLines('./input/8');
 
   console.log(
-    input.split('\n').reduce(
+    input.reduce(
       (sum: number, entry: string): number =>
         sum +
         entry

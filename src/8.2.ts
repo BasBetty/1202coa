@@ -1,5 +1,5 @@
 // see also: ./full/8.2.full.ts
-import { readFile } from 'fs/promises';
+import { readLines } from './readLines';
 
 type Segment = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g';
 type SegmentMap<T> = { [K in Segment]?: T };
@@ -18,12 +18,11 @@ const digits = new Map([
 ]);
 
 (async (): Promise<void> => {
-  const input = await readFile('./input/8', 'utf-8');
-  const entries = input.split('\n');
+  const input = await readLines('./input/8');
   const count: SegmentMap<number> = {};
   let sum = 0;
 
-  entries.forEach((entry: string): void => {
+  input.forEach((entry: string): void => {
     [...'abcdefg'].forEach((x: string): void => {
       count[x as Segment] = 0;
     });
