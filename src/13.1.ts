@@ -18,10 +18,10 @@ const sheetSize = (
 };
 
 (async (): Promise<void> => {
-  const input = await readFile('./input/13a', 'utf-8');
+  const input = await readFile('./input/13', 'utf-8');
   const [posBlock, foldBlock] = input.trim().split('\n\n');
-  let sheet = new Map<number, Set<number>>();
-  let folded = new Map<number, Set<number>>();
+  const sheet = new Map<number, Set<number>>();
+  const folded = new Map<number, Set<number>>();
 
   posBlock!.split('\n').forEach((line: string): void => {
     const [xRaw, yRaw] = line.split(',');
@@ -37,20 +37,15 @@ const sheetSize = (
 
   for (const [x, ys] of sheet) {
     for (const y of ys) {
-      if (axis === 'x' && x > fold) {
-        const newX = width - 1 - x;
-        folded.set(newX, (folded.get(newX) ?? new Set()).add(y));
-      } else if (axis === 'y' && y > fold) {
-        folded.set(x, (folded.get(x) ?? new Set()).add(height - 1 - y));
-      } else {
-        folded.set(x, (folded.get(x) ?? new Set()).add(y));
-      }
+      const newX = axis === 'x' && x > fold ? width - 1 - x : x;
+      const newY = axis === 'y' && y > fold ? height - 1 - y : y;
+      folded.set(newX, (folded.get(newX) ?? new Set()).add(newY));
     }
   }
 
   let n = 0;
 
-  for (const [, ys] of sheet) n += ys.size;
+  for (const [, ys] of folded) n += ys.size;
 
   console.log(n);
 })();

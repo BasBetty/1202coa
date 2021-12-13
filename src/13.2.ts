@@ -21,7 +21,6 @@ const sheetSize = (
   const input = await readFile('./input/13', 'utf-8');
   const [posBlock, foldBlock] = input.trim().split('\n\n');
   let sheet = new Map<number, Set<number>>();
-  let folded = new Map<number, Set<number>>();
 
   posBlock!.split('\n').forEach((line: string): void => {
     const [xRaw, yRaw] = line.split(',');
@@ -34,22 +33,17 @@ const sheetSize = (
     const [, axis, valueRaw] = /fold along (x|y)=(\d+)/.exec(line)!;
     const fold = read10(valueRaw!);
     const { width, height } = sheetSize(sheet);
+    const folded = new Map();
 
     for (const [x, ys] of sheet) {
       for (const y of ys) {
-        if (axis === 'x' && x > fold) {
-          const newX = width - 1 - x;
-          folded.set(newX, (folded.get(newX) ?? new Set()).add(y));
-        } else if (axis === 'y' && y > fold) {
-          folded.set(x, (folded.get(x) ?? new Set()).add(height - 1 - y));
-        } else {
-          folded.set(x, (folded.get(x) ?? new Set()).add(y));
-        }
+        const newX = axis === 'x' && x > fold ? width - 1 - x : x;
+        const newY = axis === 'y' && y > fold ? height - 1 - y : y;
+        folded.set(newX, (folded.get(newX) ?? new Set()).add(newY));
       }
     }
 
     sheet = folded;
-    folded = new Map();
   });
 
   const { width, height } = sheetSize(sheet);
@@ -60,8 +54,5 @@ const sheetSize = (
   );
 
   for (const [x, ys] of sheet) for (const y of ys) scanlines[y]![x] = 'X';
-
-  console.log(
-    scanlines.map((line: string[]): string => line.join('')).join('\n')
-  );
+  for (const line of scanlines) console.log(line.join(''));
 })();
