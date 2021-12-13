@@ -53,6 +53,6 @@ const sheetSize = (
     (_, y: number): string[] => new Array(width).fill(' ')
   );
 
-  for (const [x, ys] of sheet) for (const y of ys) scanlines[y]![x] = 'X';
+  for (const [x, ys] of sheet) for (const y of ys) scanlines[y]![x] = '█';
   for (const line of scanlines) console.log(line.join(''));
 })();
