@@ -1,10 +1,12 @@
 import { readFile } from 'fs/promises';
 
+import { incrementMap } from './incrementMap';
+
 (async (): Promise<void> => {
   const input = await readFile('./input/14', 'utf-8');
   const [template, ruleBlock] = input.split('\n\n');
   const rules = new Map<string, string>();
-  const count = new Map<string, number>();
+  const counts = new Map<string, number>();
   let polymer = template!.split('');
 
   for (const line of ruleBlock!.split('\n')) {
@@ -29,13 +31,12 @@ import { readFile } from 'fs/promises';
     polymer = newPoly;
   }
 
-  for (const element of polymer)
-    count.set(element, (count.get(element) ?? 0) + 1);
+  for (const element of polymer) incrementMap(counts, element, 1);
 
   let max = Number.NEGATIVE_INFINITY;
   let min = Number.POSITIVE_INFINITY;
 
-  for (const [, n] of count) {
+  for (const [, n] of counts) {
     if (n > max) max = n;
     if (n < min) min = n;
   }

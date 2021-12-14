@@ -1,5 +1,7 @@
 import { readFile } from 'fs/promises';
 
+import { incrementMap } from './incrementMap';
+
 (async (): Promise<void> => {
   const input = await readFile('./input/14', 'utf-8');
   const [template, ruleBlock] = input.split('\n\n');
@@ -7,13 +9,10 @@ import { readFile } from 'fs/promises';
   const counts = new Map<string, number>();
   let pairs = new Map<string, number>();
 
-  for (let i = 0; i < template!.length; i += 1) {
-    const pair = `${template![i]}${template![i + 1]}`;
-    pairs.set(pair, (pairs.get(pair) ?? 0) + 1);
-  }
+  for (let i = 0; i < template!.length; i += 1)
+    incrementMap(pairs, `${template![i]}${template![i + 1]}`, 1);
 
-  for (const element of template!)
-    counts.set(element, (counts.get(element) ?? 0) + 1);
+  for (const element of template!) incrementMap(counts, element, 1);
 
   for (const line of ruleBlock!.split('\n')) {
     const [pair, element] = line.split(' -> ');
@@ -27,13 +26,11 @@ import { readFile } from 'fs/promises';
       if (rules.has(pair)) {
         const [a, c] = pair;
         const b = rules.get(pair)!;
-        const pair1 = `${a}${b}`;
-        const pair2 = `${b}${c}`;
-        counts.set(b, (counts.get(b) ?? 0) + count);
-        newPairs.set(pair1, (newPairs.get(pair1) ?? 0) + count);
-        newPairs.set(pair2, (newPairs.get(pair2) ?? 0) + count);
+        incrementMap(counts, b, count);
+        incrementMap(newPairs, `${a}${b}`, count);
+        incrementMap(newPairs, `${b}${c}`, count);
       } else {
-        newPairs.set(pair, (newPairs.get(pair) ?? 0) + count);
+        incrementMap(newPairs, pair, count);
       }
     }
 
