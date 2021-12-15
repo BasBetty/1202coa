@@ -27,13 +27,14 @@ import { readLines } from './readLines';
     const seen = once.has(cave);
 
     if ((path.length !== 0 && cave === 'start') || (twice && seen)) return;
+    if (seen) twice = true;
 
     const newOnce = new Set(once);
 
     if (cave.toLowerCase() === cave) newOnce.add(cave);
 
     for (const next of map.get(cave)!)
-      follow(next, newOnce, seen, [...path, cave]);
+      follow(next, newOnce, twice, [...path, cave]);
   };
 
   follow('start', new Set(), false, []);
