@@ -2,8 +2,8 @@ import { read10 } from './read10';
 import { readLines } from './readLines';
 
 const solve = (lines: string[]): number => {
-  const map = new Map<number, Map<number, number>>();
-  const minRisks = new Map<number, Map<number, number>>();
+  const risks = new Map<number, Map<number, number>>();
+  const paths = new Map<number, Map<number, number>>();
   const size = lines.length;
   const sizeScaled = size * 5;
 
@@ -19,110 +19,61 @@ const solve = (lines: string[]): number => {
           let valueScaled = value + i + j;
           if (valueScaled > 9) valueScaled = valueScaled % 9;
 
-          map.set(
+          risks.set(
             xScaled,
-            (map.get(xScaled) ?? new Map()).set(yScaled, valueScaled)
+            (risks.get(xScaled) ?? new Map()).set(yScaled, valueScaled)
           );
 
-          minRisks.set(
+          paths.set(
             xScaled,
-            (minRisks.get(xScaled) ?? new Map()).set(yScaled, valueScaled)
+            (paths.get(xScaled) ?? new Map()).set(yScaled, valueScaled)
           );
         }
       }
     });
   });
 
-  const setMinRisk = (x: number, y: number, newRisk: number): void => {
-    minRisks.set(x, minRisks.get(x)!.set(y, newRisk));
+  const updatePath = (x: number, y: number, adjacentRisk: number): void => {
+    const updated = adjacentRisk + risks.get(x)!.get(y)!;
 
-    if (x > 0) {
-      const left = map.get(x - 1)!.get(y)!;
-      const minLeft = minRisks.get(x - 1)!.get(y)!;
-      const newLeft = newRisk + left;
-
-      if (newLeft < minLeft) setMinRisk(x - 1, y, newLeft);
-    }
-
-    if (y > 0) {
-      const up = map.get(x)!.get(y - 1)!;
-      const minUp = minRisks.get(x)!.get(y - 1)!;
-      const newUp = newRisk + up;
-
-      if (newUp < minUp) setMinRisk(x, y - 1, newUp);
-    }
-
-    if (x < sizeScaled - 1) {
-      const right = map.get(x + 1)!.get(y)!;
-      const minRight = minRisks.get(x + 1)!.get(y)!;
-      const newRight = newRisk + right;
-
-      if (newRight < minRight) setMinRisk(x + 1, y, newRight);
-    }
-
-    if (y < sizeScaled - 1) {
-      const down = map.get(x)!.get(y + 1)!;
-      const minDown = minRisks.get(x)!.get(y + 1)!;
-      const newDown = newRisk + down;
-
-      if (newDown < minDown) setMinRisk(x, y + 1, newDown);
-    }
+    if (updated < paths.get(x)!.get(y)!) setPath(x, y, updated);
   };
 
-  const incMinRisk = (x: number, y: number, increment: number): void =>
-    setMinRisk(x, y, map.get(x)!.get(y)! + increment);
+  const incPath = (x: number, y: number, increment: number): void =>
+    setPath(x, y, risks.get(x)!.get(y)! + increment);
+
+  const setPath = (x: number, y: number, newRisk: number): void => {
+    paths.set(x, paths.get(x)!.set(y, newRisk));
+    if (x > 0) updatePath(x - 1, y, newRisk);
+    if (y > 0) updatePath(x, y - 1, newRisk);
+    if (x < size - 1) updatePath(x + 1, y, newRisk);
+    if (y < size - 1) updatePath(x, y + 1, newRisk);
+  };
 
   for (let n = 1; n < sizeScaled; n += 1) {
     for (let i = 0; i < n; i += 1) {
-      const a = minRisks.get(n - 1)!.get(i)!;
-      const b = i === 0 ? a : Math.min(a, minRisks.get(n)!.get(i - 1)!);
-      const c = minRisks.get(i)!.get(n - 1)!;
-      const d = i === 0 ? c : Math.min(c, minRisks.get(i - 1)!.get(n)!);
+      const a = paths.get(n - 1)!.get(i)!;
+      const b = i === 0 ? a : Math.min(a, paths.get(n)!.get(i - 1)!);
+      const c = paths.get(i)!.get(n - 1)!;
+      const d = i === 0 ? c : Math.min(c, paths.get(i - 1)!.get(n)!);
 
-      incMinRisk(n, i, b);
-      incMinRisk(i, n, d);
+      incPath(n, i, b);
+      incPath(i, n, d);
     }
 
-    incMinRisk(
+    incPath(
       n,
       n,
-      Math.min(minRisks.get(n - 1)!.get(n)!, minRisks.get(n)!.get(n - 1)!)
+      Math.min(paths.get(n - 1)!.get(n)!, paths.get(n)!.get(n - 1)!)
     );
   }
 
   return (
-    minRisks.get(sizeScaled - 1)!.get(sizeScaled - 1)! -
-    minRisks.get(0)!.get(0)!
+    paths.get(sizeScaled - 1)!.get(sizeScaled - 1)! - paths.get(0)!.get(0)!
   );
 };
 
 (async (): Promise<void> => {
   const input = await readLines('./input/15');
-
-  //   const input = `
-  // 1163751742
-  // 1381373672
-  // 2136511328
-  // 3694931569
-  // 7463417111
-  // 1319128137
-  // 1359912421
-  // 3125421639
-  // 1293138521
-  // 2311944581
-  //           `
-  //     .trim()
-  //     .split('\n');
-
-  //   const input = `
-  // 00000
-  // 99990
-  // 00000
-  // 09999
-  // 00000
-  //         `
-  //     .trim()
-  //     .split('\n');
-
   console.log(solve(input));
 })();
