@@ -1,9 +1,7 @@
-// see also: ./full/15.2.full.ts
-import { read10 } from './read10';
-import { readLines } from './readLines';
+import { read10 } from '../read10';
+import { readLines } from '../readLines';
 
-(async (): Promise<void> => {
-  const lines = await readLines('./input/15');
+const solve = (lines: string[]): number => {
   const risks = new Map<number, Map<number, number>>();
   const paths = new Map<number, Map<number, number>>();
   const size = lines.length;
@@ -63,7 +61,17 @@ import { readLines } from './readLines';
     );
   }
 
-  console.log(
+  return (
     paths.get(sizeScaled - 1)!.get(sizeScaled - 1)! - paths.get(0)!.get(0)!
   );
+};
+
+(async (): Promise<void> => {
+  const input = await readLines('./input/15');
+
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();
