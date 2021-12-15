@@ -7,27 +7,20 @@ const solve = (lines: string[]): number => {
   const size = lines.length;
   const sizeScaled = size * 5;
 
-  lines.forEach((line: string, y: number): void => {
-    [...line!].forEach((rawRisk: string, x: number): void => {
+  lines.forEach((line: string, col: number): void => {
+    [...line!].forEach((rawRisk: string, row: number): void => {
       const value = read10(rawRisk);
 
       for (let i = 0; i < 5; i += 1) {
-        const xScaled = size * i + x;
+        const x = size * i + row;
 
         for (let j = 0; j < 5; j += 1) {
-          const yScaled = size * j + y;
-          let valueScaled = value + i + j;
-          if (valueScaled > 9) valueScaled = valueScaled % 9;
+          const y = size * j + col;
+          const valueScaled = value + i + j;
+          const valueMod = valueScaled > 9 ? valueScaled % 9 : valueScaled;
 
-          risks.set(
-            xScaled,
-            (risks.get(xScaled) ?? new Map()).set(yScaled, valueScaled)
-          );
-
-          paths.set(
-            xScaled,
-            (paths.get(xScaled) ?? new Map()).set(yScaled, valueScaled)
-          );
+          risks.set(x, (risks.get(x) ?? new Map()).set(y, valueMod));
+          paths.set(x, (paths.get(x) ?? new Map()).set(y, valueMod));
         }
       }
     });
