@@ -48,12 +48,10 @@ import { readLines } from './readLines';
   for (let n = 1; n < sizeScaled; n += 1) {
     for (let i = 0; i < n; i += 1) {
       const a = paths.get(n - 1)!.get(i)!;
-      const b = i === 0 ? a : Math.min(a, paths.get(n)!.get(i - 1)!);
       const c = paths.get(i)!.get(n - 1)!;
-      const d = i === 0 ? c : Math.min(c, paths.get(i - 1)!.get(n)!);
 
-      incPath(n, i, b);
-      incPath(i, n, d);
+      incPath(n, i, i === 0 ? a : Math.min(a, paths.get(n)!.get(i - 1)!));
+      incPath(i, n, i === 0 ? c : Math.min(c, paths.get(i - 1)!.get(n)!));
     }
 
     incPath(
