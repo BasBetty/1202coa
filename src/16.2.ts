@@ -87,26 +87,23 @@ const parseOperator = (state: State, header: Header): Operator => {
     const start = state.pos;
 
     while (state.pos - start < length && state.pos < state.input.length)
-      packets = [...packets, ...parse(state)];
+      packets.push(parse(state));
   } else {
     const number = parseDecimal(state, 11);
 
-    for (let i = 0; i < number && state.pos < state.input.length; i += 1)
-      packets = [...packets, ...parse(state)];
+    for (let i = 0; i < number; i += 1) packets.push(parse(state));
   }
 
   return { ...header, packets };
 };
 
-const parse = (state: State): Packet[] => {
+const parse = (state: State): Packet => {
   const version = parseDecimal(state, 3);
   const typeId = parseDecimal(state, 3);
 
-  return [
-    typeId === 4
-      ? parseLiteral(state, { version, typeId })
-      : parseOperator(state, { version, typeId }),
-  ];
+  return typeId === 4
+    ? parseLiteral(state, { version, typeId })
+    : parseOperator(state, { version, typeId });
 };
 
 const evaluate = (packet: Packet): number => {
@@ -120,19 +117,8 @@ const evaluate = (packet: Packet): number => {
   if (typeId === 1)
     return packets.reduce((a: number, p: Packet): number => a * evaluate(p), 1);
 
-  if (typeId === 2) {
-    return packets.reduce(
-      (a: number, p: Packet): number => Math.min(a, evaluate(p)),
-      Number.POSITIVE_INFINITY
-    );
-  }
-
-  if (typeId === 3) {
-    return packets.reduce(
-      (a: number, p: Packet): number => Math.max(a, evaluate(p)),
-      Number.NEGATIVE_INFINITY
-    );
-  }
+  if (typeId === 2) return Math.min(...packets.map(evaluate));
+  if (typeId === 3) return Math.max(...packets.map(evaluate));
 
   const a = evaluate(packets[0]!);
   const b = evaluate(packets[1]!);
@@ -146,5 +132,5 @@ const evaluate = (packet: Packet): number => {
   const input = await readFile('./input/16', 'utf-8');
   const packet = parse({ input: hexToBinary(input.trim()), pos: 0 });
 
-  console.log(evaluate(packet[0]!));
+  console.log(evaluate(packet));
 })();
