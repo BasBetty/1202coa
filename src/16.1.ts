@@ -9,9 +9,9 @@ type Operator = Header & { packets: Packet[] };
 type Literal = Header & { value: number };
 type Packet = Literal | Operator;
 
-interface ParseResult<T> {
-  result: T;
-  rem: string[];
+interface State {
+  input: string;
+  pos: number;
 }
 
 const hexCharToBits = new Map([
@@ -33,7 +33,7 @@ const hexCharToBits = new Map([
   ['F', '1111'],
 ]);
 
-const binaryToDecimal = (binary: string[]): number => {
+const binaryToDecimal = (binary: string): number => {
   let decimal = 0;
   let leading = true;
 
@@ -48,79 +48,65 @@ const binaryToDecimal = (binary: string[]): number => {
   return decimal;
 };
 
-const hexToBinary = (hex: string): string[] =>
+const hexToBinary = (hex: string): string =>
   [...hex].reduce(
-    (binary: string[], hexChar: string): string[] => [
-      ...binary,
-      ...hexCharToBits.get(hexChar)!,
-    ],
-    []
+    (binary: string, hexChar: string): string =>
+      binary + hexCharToBits.get(hexChar)!,
+    ''
   );
 
-const parseDecimal = (rem: string[], size: number): ParseResult<number> => ({
-  result: binaryToDecimal(rem.slice(0, size)),
-  rem: rem.slice(size),
-});
+const parseDecimal = (state: State, size: number): number => {
+  const decimal = binaryToDecimal(
+    state.input.slice(state.pos, state.pos + size)
+  );
 
-const parseLiteral = (
-  binary: string[],
-  header: Header
-): ParseResult<Literal> => {
-  let bits: string[] = [];
-  let rem = binary;
-  let end = false;
-
-  while (rem.length >= 5 && !end) {
-    end = rem[0] === '0';
-    bits = [...bits, ...rem.slice(1, 5)];
-    rem = rem.slice(5);
-  }
-
-  return { result: { ...header, value: binaryToDecimal(bits) }, rem };
+  state.pos += size;
+  return decimal;
 };
 
-const parseOperator = (
-  binary: string[],
-  header: Header
-): ParseResult<Operator> => {
-  const packets: Packet[] = [];
-  let rem = binary.slice(1);
+const parseLiteral = (state: State, header: Header): Literal => {
+  let bits: string = '';
+  let last = false;
 
-  if (binary[0] === '0') {
-    const length = parseDecimal(rem, 15);
-    rem = length.rem.slice(0, length.result);
+  while (!last) {
+    last = state.input[state.pos] === '0';
+    bits += state.input.slice(state.pos + 1, state.pos + 5);
+    state.pos += 5;
+  }
 
-    while (rem.length > 0) {
-      const packet = parse(rem);
-      rem = packet.rem;
+  return { ...header, value: binaryToDecimal(bits) };
+};
 
-      packets.push(packet.result);
-    }
+const parseOperator = (state: State, header: Header): Operator => {
+  const mode = state.input[state.pos];
+  let packets: Packet[] = [];
+  state.pos += 1;
 
-    rem = length.rem.slice(length.result);
+  if (mode === '0') {
+    const length = parseDecimal(state, 15);
+    const start = state.pos;
+
+    while (state.pos - start < length && state.pos < state.input.length)
+      packets = [...packets, ...parse(state)];
   } else {
-    const number = parseDecimal(rem, 11);
-    rem = number.rem;
+    const number = parseDecimal(state, 11);
 
-    for (let i = 0; i < number.result; i += 1) {
-      const packet = parse(rem);
-      rem = packet.rem;
-
-      packets.push(packet.result);
-    }
+    for (let i = 0; i < number && state.pos < state.input.length; i += 1)
+      packets = [...packets, ...parse(state)];
   }
 
-  return { result: { ...header, packets }, rem };
+  return { ...header, packets };
 };
 
-const parse = (rem: string[]): ParseResult<Packet> => {
-  const { result: version, rem: versionRem } = parseDecimal(rem, 3);
-  const { result: typeId, rem: headerRem } = parseDecimal(versionRem, 3);
-  const header = { version, typeId };
+const parse = (state: State): Packet[] => {
+  const version = parseDecimal(state, 3);
+  const typeId = parseDecimal(state, 3);
 
-  return typeId === 4
-    ? parseLiteral(headerRem, header)
-    : parseOperator(headerRem, header);
+  return [
+    typeId === 4
+      ? parseLiteral(state, { version, typeId })
+      : parseOperator(state, { version, typeId }),
+  ];
 };
 
 const sumVersions = (packet: Packet): number =>
@@ -132,11 +118,9 @@ const sumVersions = (packet: Packet): number =>
         0
       );
 
-const solve = (input: string): number =>
-  sumVersions(parse(hexToBinary(input.trim())).result);
-
 (async (): Promise<void> => {
   const input = await readFile('./input/16', 'utf-8');
+  const packet = parse({ input: hexToBinary(input.trim()), pos: 0 });
 
-  console.log(solve(input));
+  console.log(sumVersions(packet[0]!));
 })();

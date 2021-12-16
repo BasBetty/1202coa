@@ -109,42 +109,27 @@ const parse = (state: State): Packet[] => {
   ];
 };
 
-const evaluate = (packet: Packet): number => {
-  if (packet.typeId === 4) return (packet as Literal).value;
+const sumVersions = (packet: Packet): number =>
+  packet.typeId === 4
+    ? packet.version
+    : packet.version +
+      (packet as Operator).packets.reduce(
+        (sum: number, packet: Packet): number => sum + sumVersions(packet),
+        0
+      );
 
-  const { typeId, packets } = packet as Operator;
+const solve = (input: string): number => {
+  const packet = parse({ input: hexToBinary(input.trim()), pos: 0 });
 
-  if (typeId === 0)
-    return packets.reduce((a: number, p: Packet): number => a + evaluate(p), 0);
-
-  if (typeId === 1)
-    return packets.reduce((a: number, p: Packet): number => a * evaluate(p), 1);
-
-  if (typeId === 2) {
-    return packets.reduce(
-      (a: number, p: Packet): number => Math.min(a, evaluate(p)),
-      Number.POSITIVE_INFINITY
-    );
-  }
-
-  if (typeId === 3) {
-    return packets.reduce(
-      (a: number, p: Packet): number => Math.max(a, evaluate(p)),
-      Number.NEGATIVE_INFINITY
-    );
-  }
-
-  const a = evaluate(packets[0]!);
-  const b = evaluate(packets[1]!);
-
-  if (typeId === 5) return a > b ? 1 : 0;
-  if (typeId === 6) return a < b ? 1 : 0;
-  return a === b ? 1 : 0;
+  return sumVersions(packet[0]!);
 };
 
 (async (): Promise<void> => {
   const input = await readFile('./input/16', 'utf-8');
-  const packet = parse({ input: hexToBinary(input.trim()), pos: 0 });
 
-  console.log(evaluate(packet[0]!));
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();
