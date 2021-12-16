@@ -86,8 +86,7 @@ const parseOperator = (state: State, header: Header): Operator => {
     const length = parseDecimal(state, 15);
     const start = state.pos;
 
-    while (state.pos - start < length && state.pos < state.input.length)
-      packets.push(parse(state));
+    while (state.pos - start < length) packets.push(parse(state));
   } else {
     const number = parseDecimal(state, 11);
 
