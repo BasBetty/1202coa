@@ -17,8 +17,8 @@ import { readLines } from './readLines';
   });
 
   const updatePath = (x: number, y: number, adjacentRisk: number): void => {
+    if (x < 0 || x > size - 1 || y < 0 || y > size - 1) return;
     const updated = adjacentRisk + risks.get(x)!.get(y)!;
-
     if (updated < paths.get(x)!.get(y)!) setPath(x, y, updated);
   };
 

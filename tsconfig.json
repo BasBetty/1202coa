@@ -8,6 +8,7 @@
     "downlevelIteration": true,
     "exactOptionalPropertyTypes": true,
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "lib": ["DOM", "ES2020"],
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
