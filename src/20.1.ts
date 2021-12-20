@@ -3,9 +3,6 @@ import { readFile } from 'fs/promises';
 const newImage = (size: number): number[][] =>
   Array.from({ length: size }, () => new Array(size).fill(0));
 
-const toDecimal = (pxs: number[]): number =>
-  parseInt(pxs.join('').replace(/#/g, '1').replace(/\./g, '0'), 2);
-
 (async () => {
   const N = 2;
   const input = await readFile('./input/20', 'utf-8');
@@ -28,17 +25,20 @@ const toDecimal = (pxs: number[]): number =>
 
     for (let y = 1; y < size - 1; y += 1) {
       for (let x = 1; x < size - 1; x += 1) {
-        const index = toDecimal([
-          prev[y - 1]![x - 1]!,
-          prev[y - 1]![x]!,
-          prev[y - 1]![x + 1]!,
-          prev[y]![x - 1]!,
-          prev[y]![x]!,
-          prev[y]![x + 1]!,
-          prev[y + 1]![x - 1]!,
-          prev[y + 1]![x]!,
-          prev[y + 1]![x + 1]!,
-        ]);
+        const index = parseInt(
+          [
+            prev[y - 1]![x - 1]!,
+            prev[y - 1]![x]!,
+            prev[y - 1]![x + 1]!,
+            prev[y]![x - 1]!,
+            prev[y]![x]!,
+            prev[y]![x + 1]!,
+            prev[y + 1]![x - 1]!,
+            prev[y + 1]![x]!,
+            prev[y + 1]![x + 1]!,
+          ].join(''),
+          2
+        );
 
         current[y]![x]! = algo[index]!;
       }
