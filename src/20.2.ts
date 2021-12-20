@@ -7,7 +7,7 @@ const toDecimal = (pxs: number[]): number =>
   parseInt(pxs.join('').replace(/#/g, '1').replace(/\./g, '0'), 2);
 
 (async () => {
-  const N = 2;
+  const N = 50;
   const input = await readFile('./input/20', 'utf-8');
   const [rawAlgo, rawImage] = input.trim().split('\n\n');
   const image = rawImage!.split('\n');
