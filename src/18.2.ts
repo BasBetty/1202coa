@@ -74,12 +74,13 @@ export const mag = (a: Num[]): number => {
     if (i !== a.length - 1 && left) {
       const [x1, d1] = a[i + 1]!;
 
-      if (d0 === d1)
+      if (d0 === d1) {
         return mag([
           ...a.slice(0, i),
           [3 * x0 + 2 * x1, d0 - 1],
           ...a.slice(i + 2),
         ]);
+      }
     }
   }
 
