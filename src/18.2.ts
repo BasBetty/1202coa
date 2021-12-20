@@ -44,7 +44,7 @@ export const reduce = (a: Num[]): Num[] => {
     left = d === d0 ? !left : d0 > d;
     d = d0;
 
-    if (i !== a.length - 1 && d > 4 && left) {
+    if (i !== a.length - 1 && d0 > 4 && left) {
       const n1 = a[i + 1]!;
       const d1 = n1[1];
 
@@ -94,10 +94,17 @@ export const mag = (a: Num[]): number => {
     .split('\n')
     .map((line: string): Num[] => flatten(JSON.parse(line)));
 
-  let sum = numbers[0]!;
+  let max = Number.NEGATIVE_INFINITY;
 
-  for (let i = 1; i < numbers.length; i += 1)
-    sum = reduce(add(sum, numbers[i]!));
+  for (let i = 0; i < numbers.length; i += 1) {
+    for (let j = i + 1; j < numbers.length; j += 1) {
+      max = Math.max(
+        max,
+        mag(reduce(add(numbers[i]!, numbers[j]!))),
+        mag(reduce(add(numbers[j]!, numbers[i]!)))
+      );
+    }
+  }
 
-  console.log(mag(sum));
+  console.log(max);
 })();
