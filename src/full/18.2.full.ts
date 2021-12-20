@@ -34,17 +34,11 @@ export const explode = (
 };
 
 export const reduce = (a: Num[]): Num[] => {
-  let d = 0;
-  let left = false;
-
   for (let i = 0; i < a.length; i += 1) {
     const n0 = a[i]!;
     const d0 = n0[1];
 
-    left = d === d0 ? !left : d0 > d;
-    d = d0;
-
-    if (i !== a.length - 1 && d0 > 4 && left) {
+    if (i !== a.length - 1 && d0 > 4) {
       const n1 = a[i + 1]!;
       const d1 = n1[1];
 
@@ -62,16 +56,10 @@ export const reduce = (a: Num[]): Num[] => {
 };
 
 export const mag = (a: Num[]): number => {
-  let d = 0;
-  let left = false;
-
   for (let i = 0; i < a.length; i += 1) {
     const [x0, d0] = a[i]!;
 
-    left = d === d0 ? !left : d0 > d;
-    d = d0;
-
-    if (i !== a.length - 1 && left) {
+    if (i !== a.length - 1) {
       const [x1, d1] = a[i + 1]!;
 
       if (d0 === d1)
@@ -86,9 +74,7 @@ export const mag = (a: Num[]): number => {
   return a[0]![0]!;
 };
 
-(async (): Promise<void> => {
-  const input = await readFile('./input/18', 'utf-8');
-
+const solve = (input: string): number => {
   const numbers = input
     .trim()
     .split('\n')
@@ -105,5 +91,15 @@ export const mag = (a: Num[]): number => {
     }
   }
 
-  console.log(max);
+  return max;
+};
+
+(async (): Promise<void> => {
+  const input = await readFile('./input/18', 'utf-8');
+
+  const start = performance.now();
+  const solution = solve(input);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();
