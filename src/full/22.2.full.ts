@@ -1,5 +1,5 @@
-import { read10 } from './read10';
-import { readLines } from './readLines';
+import { read10 } from '../read10';
+import { readLines } from '../readLines';
 
 interface Cuboid {
   x0: number;
@@ -31,19 +31,19 @@ export const intersect = (a: Cuboid, b: Cuboid): Cuboid | null => {
   return z0 > z1 ? null : { x0, x1, y0, y1, z0, z1 };
 };
 
-const makeTop = (a: Cuboid, b: Cuboid): Cuboid[] =>
+export const makeTop = (a: Cuboid, b: Cuboid): Cuboid[] =>
   b.z1 >= a.z1 ? [] : [{ ...b, z0: b.z1 + 1, z1: a.z1 }];
 
-const makeBottom = (a: Cuboid, b: Cuboid): Cuboid[] =>
+export const makeBottom = (a: Cuboid, b: Cuboid): Cuboid[] =>
   b.z0 <= a.z0 ? [] : [{ ...b, z0: a.z0, z1: b.z0 - 1 }];
 
-const makeFront = (a: Cuboid, b: Cuboid): Cuboid[] =>
+export const makeFront = (a: Cuboid, b: Cuboid): Cuboid[] =>
   b.y1 >= a.y1 ? [] : [{ ...a, y0: b.y1 + 1 }];
 
-const makeBack = (a: Cuboid, b: Cuboid): Cuboid[] =>
+export const makeBack = (a: Cuboid, b: Cuboid): Cuboid[] =>
   b.y0 <= a.y0 ? [] : [{ ...a, y1: b.y0 - 1 }];
 
-const makeRight = (a: Cuboid, b: Cuboid): Cuboid[] =>
+export const makeRight = (a: Cuboid, b: Cuboid): Cuboid[] =>
   b.x1 >= a.x1
     ? []
     : [
@@ -55,7 +55,7 @@ const makeRight = (a: Cuboid, b: Cuboid): Cuboid[] =>
         },
       ];
 
-const makeLeft = (a: Cuboid, b: Cuboid): Cuboid[] =>
+export const makeLeft = (a: Cuboid, b: Cuboid): Cuboid[] =>
   b.x0 <= a.x0
     ? []
     : [
@@ -82,8 +82,7 @@ const turnOff = (a: Cuboid, b: Cuboid): Cuboid[] => {
       ];
 };
 
-(async (): Promise<void> => {
-  const lines = await readLines('./input/22');
+const solve = (lines: string[]): number => {
   const n = lines.length;
   const steps: Step[] = new Array(n);
 
@@ -115,5 +114,15 @@ const turnOff = (a: Cuboid, b: Cuboid): Cuboid[] => {
     []
   );
 
-  console.log(countCubes(reactor));
+  return countCubes(reactor);
+};
+
+(async (): Promise<void> => {
+  const lines = await readLines('./input/22');
+
+  const start = performance.now();
+  const solution = solve(lines);
+  const end = performance.now();
+
+  console.log(`(${end - start}ms) ${solution}`);
 })();
