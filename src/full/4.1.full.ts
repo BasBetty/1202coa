@@ -1,42 +1,47 @@
-import { read10 } from '../read10';
-import { readLines } from '../readLines';
-import { transposeMatrix } from '../transposeMatrix';
+import { readFile } from 'fs/promises';
 
-const solve = (input: string[]): number => {
-  const marked = input[0]?.split(',').map(read10);
+const solve = (input: string): number => {
   const boards: Set<number>[][] = [];
-  let rows: number[][] = [];
+  const groups = input.split(/\s+/g);
+  const numbers = new Uint8Array(groups[0]!.split(',').map(Number));
+  const c = groups.slice(1).map(Number);
 
-  for (let i = 2; i < input.length; i += 1) {
-    if (i % 6 === 1) {
-      boards.push([
-        ...rows.map((row: number[]): Set<number> => new Set(row)),
-        ...transposeMatrix(rows).map(
-          (row: number[]): Set<number> => new Set(row)
-        ),
-      ]);
-
-      rows = [];
-    } else {
-      rows.push(input[i]!.trim().split(/\s+/).map(read10));
-    }
+  for (let i = 0; i < c.length; i += 25) {
+    boards.push([
+      new Set(c.slice(i, i + 5)),
+      new Set(c.slice(i + 5, i + 10)),
+      new Set(c.slice(i + 10, i + 15)),
+      new Set(c.slice(i + 15, i + 20)),
+      new Set(c.slice(i + 20, i + 25)),
+      new Set([c[i + 0]!, c[i + 5]!, c[i + 10]!, c[i + 15]!, c[i + 20]!]),
+      new Set([c[i + 1]!, c[i + 6]!, c[i + 11]!, c[i + 16]!, c[i + 21]!]),
+      new Set([c[i + 2]!, c[i + 7]!, c[i + 12]!, c[i + 17]!, c[i + 22]!]),
+      new Set([c[i + 3]!, c[i + 8]!, c[i + 13]!, c[i + 18]!, c[i + 23]!]),
+      new Set([c[i + 4]!, c[i + 9]!, c[i + 14]!, c[i + 19]!, c[i + 24]!]),
+    ]);
   }
 
-  for (let i = 0; i < marked!.length; i += 1) {
-    for (let j = 0; j < boards.length; j += 1) {
-      for (let k = 0; k < boards[j]!.length; k += 1) {
-        boards[j]![k]!.delete(marked![i]!);
+  const N = numbers.length;
+  const M = boards.length;
 
-        if (boards[j]![k]!.size === 0) {
-          let x = 0;
+  for (let i = 0; i < N; i += 1) {
+    for (let j = 0; j < M; j += 1) {
+      for (let k = 0; k < 10; k += 1) {
+        const board = boards[j]!;
+        const line = board[k]!;
+        const number = numbers[i]!;
+        line.delete(number);
 
-          for (let l = 0; l < boards[j]!.length / 2; l += 1) {
-            const board = [...boards[j]![l]!];
+        if (line.size === 0) {
+          let score = 0;
 
-            for (let m = 0; m < board.length; m += 1) x += board[m]!;
+          for (let x = 0; x < 5; x += 1) {
+            board[x]!.forEach((y: number): void => {
+              score += y;
+            });
           }
 
-          return x * marked![i]!;
+          return score * number;
         }
       }
     }
@@ -46,7 +51,7 @@ const solve = (input: string[]): number => {
 };
 
 (async (): Promise<void> => {
-  const input = await readLines('./input/4');
+  const input = await readFile('./input/4', 'utf-8');
 
   const start = performance.now();
   const solution = solve(input);

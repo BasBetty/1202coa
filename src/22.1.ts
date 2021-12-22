@@ -14,7 +14,6 @@ import { readLines } from './readLines';
 
   const INIT_MIN = -50;
   const INIT_MAX = 50;
-
   const lines = await readLines('./input/22');
   const steps: Step[] = [];
 
