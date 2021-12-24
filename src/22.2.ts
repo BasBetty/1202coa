@@ -12,14 +12,14 @@ interface Cuboid {
 
 type Step = Cuboid & { on: boolean };
 
-export const countCubes = (cuboids: Cuboid[]): number =>
+const countCubes = (cuboids: Cuboid[]): number =>
   cuboids.reduce(
     (acc: number, { x0, x1, y0, y1, z0, z1 }: Cuboid): number =>
       acc + (x1 - x0 + 1) * (y1 - y0 + 1) * (z1 - z0 + 1),
     0
   );
 
-export const intersect = (a: Cuboid, b: Cuboid): Cuboid | null => {
+const intersect = (a: Cuboid, b: Cuboid): Cuboid | null => {
   const x0 = Math.max(a.x0, b.x0);
   const x1 = Math.min(a.x1, b.x1);
   if (x0 > x1) return null;
