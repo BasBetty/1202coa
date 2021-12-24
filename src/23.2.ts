@@ -28,13 +28,7 @@
     typeof space === 'number' ? space.toString() : '.';
 
   const hashBurrow = ({ hall, rooms: [a, b, c, d] }: Burrow): string =>
-    [
-      ...hall.map(hashSpace),
-      ...a.map(hashSpace),
-      ...b.map(hashSpace),
-      ...c.map(hashSpace),
-      ...d.map(hashSpace),
-    ].join('');
+    [...hall, ...a, ...b, ...c, ...d].map(hashSpace).join('');
 
   const r2r = (a: Burrow, i: number, from: number, to: number): Burrow => {
     const b = copyBurrow(a);
@@ -56,10 +50,11 @@
   function* go(a: Burrow): Generator<{ burrow: Burrow; cost: number }> {
     for (let i = 0; i <= 3; i += 1) {
       const room = a.rooms[i]!;
+      const top = room[0];
       const bot = room.slice(1);
 
       if (
-        room[0] === i &&
+        top === i &&
         bot.some(isEmpty) &&
         bot.every((s: Space): boolean => s === i || s === null)
       ) {
@@ -67,14 +62,9 @@
         const y = yRaw === -1 ? 3 : yRaw;
         return yield { burrow: r2r(a, i, 0, y), cost: y * COST[i as AP] };
       }
-    }
-
-    for (let i = 0; i <= 3; i += 1) {
-      const room = a.rooms[i]!;
-      const bot = room.slice(1);
 
       if (
-        room[0] === null &&
+        top === null &&
         bot.some(notEmpty) &&
         bot.some((s: Space): boolean => s !== i && s !== null)
       ) {
@@ -173,12 +163,10 @@
       const newCost = cost + next.cost;
       curr = iter.next();
 
-      if (cache.has(nextK) && cache.get(nextK)!.cost <= newCost) {
-        continue;
-      } else {
-        cache.set(nextK, { burrow: next.burrow, cost: newCost });
-        queue.push(nextK);
-      }
+      if (cache.has(nextK) && cache.get(nextK)!.cost <= newCost) continue;
+
+      cache.set(nextK, { burrow: next.burrow, cost: newCost });
+      queue.push(nextK);
     }
   }
 
