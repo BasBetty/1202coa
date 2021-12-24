@@ -30,11 +30,12 @@
   const hashBurrow = ({ hall, rooms: [a, b, c, d] }: Burrow): string =>
     [...hall, ...a, ...b, ...c, ...d].map(hashSpace).join('');
 
-  const r2r = (a: Burrow, i: number, from: number, to: number): Burrow => {
+  const r2r = (a: Burrow, i: number, from: number, to: number): State => {
     const b = copyBurrow(a);
-    b.rooms[i]![to] = a.rooms[i]![from]!;
+    const ap = a.rooms[i]![from]!;
+    b.rooms[i]![to] = ap;
     b.rooms[i]![from] = null;
-    return b;
+    return { burrow: b, cost: Math.max(from, to) * COST[ap] };
   };
 
   const r2h = (a: Burrow, room: number, hall: number): Burrow => {
@@ -45,37 +46,23 @@
   };
 
   const isEmpty = (s: Space): boolean => s === null;
-  const notEmpty = (s: Space): boolean => s !== null;
 
-  function* go(a: Burrow): Generator<{ burrow: Burrow; cost: number }> {
+  function* go(a: Burrow): Generator<State> {
     for (let i = 0; i <= 3; i += 1) {
       const room = a.rooms[i]!;
-      const top = room[0];
-      const bot = room.slice(1);
-      let someEmpty = false;
-      let someInvalid = false;
-      let someNotEmpty = false;
+      const [top, ...bot] = room;
+      let y = 3;
+      let done = true;
 
-      for (const s of bot) {
-        if (s === null) {
-          someEmpty = true;
-        } else {
-          someNotEmpty = true;
-          if (s !== i) someInvalid = true;
+      bot.forEach((s: Space, j: number): void => {
+        if (s !== null) {
+          if (y === 3) y = j;
+          if (s !== i) done = false;
         }
-      }
+      });
 
-      if (top === i && someEmpty && !someInvalid) {
-        const yRaw = bot.findIndex(notEmpty);
-        const y = yRaw === -1 ? 3 : yRaw;
-        return yield { burrow: r2r(a, i, 0, y), cost: y * COST[i as AP] };
-      }
-
-      if (top === null && someNotEmpty && someInvalid) {
-        const y = bot.findIndex(notEmpty) + 1;
-        const ap = room[y]!;
-        return yield { burrow: r2r(a, i, y, 0), cost: y * COST[ap] };
-      }
+      if (top === i && y !== 0 && done) return yield r2r(a, i, 0, y);
+      if (top === null && y !== 3 && !done) return yield r2r(a, i, y + 1, 0);
     }
 
     for (let x0 = 0; x0 <= 10; x0 += 1) {
@@ -103,9 +90,7 @@
     }
 
     for (let i = 0; i <= 3; i += 1) {
-      const room = a.rooms[i]!;
-      const top = room[0];
-      const bot = room.slice(1);
+      const [top, ...bot] = a.rooms[i]!;
       const botValid = bot.every((s: Space): boolean => s === i || s === null);
 
       if (typeof top === 'number' && (top !== i || !botValid)) {
