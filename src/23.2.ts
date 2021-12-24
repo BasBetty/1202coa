@@ -52,22 +52,26 @@
       const room = a.rooms[i]!;
       const top = room[0];
       const bot = room.slice(1);
+      let someEmpty = false;
+      let someInvalid = false;
+      let someNotEmpty = false;
 
-      if (
-        top === i &&
-        bot.some(isEmpty) &&
-        bot.every((s: Space): boolean => s === i || s === null)
-      ) {
+      for (const s of bot) {
+        if (s === null) {
+          someEmpty = true;
+        } else {
+          someNotEmpty = true;
+          if (s !== i) someInvalid = true;
+        }
+      }
+
+      if (top === i && someEmpty && !someInvalid) {
         const yRaw = bot.findIndex(notEmpty);
         const y = yRaw === -1 ? 3 : yRaw;
         return yield { burrow: r2r(a, i, 0, y), cost: y * COST[i as AP] };
       }
 
-      if (
-        top === null &&
-        bot.some(notEmpty) &&
-        bot.some((s: Space): boolean => s !== i && s !== null)
-      ) {
+      if (top === null && someNotEmpty && someInvalid) {
         const y = bot.findIndex(notEmpty) + 1;
         const ap = room[y]!;
         return yield { burrow: r2r(a, i, y, 0), cost: y * COST[ap] };
