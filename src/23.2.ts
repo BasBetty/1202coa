@@ -45,8 +45,6 @@
     return b;
   };
 
-  const isEmpty = (s: Space): boolean => s === null;
-
   function* go(a: Burrow): Generator<State> {
     for (let i = 0; i <= 3; i += 1) {
       const room = a.rooms[i]!;
@@ -77,7 +75,7 @@
         for (let i = ltr ? x0 + 1 : x1; i <= r; i += 1)
           if (ALLOWED_SET.has(i)) spaces.push(a.hall[i]!);
 
-        if (spaces.every(isEmpty)) {
+        if (spaces.every((s: Space): boolean => s === null)) {
           const burrow = copyBurrow(a);
           burrow.rooms[i]![0] = a.hall[x0]!;
           burrow.hall[x0] = null;
