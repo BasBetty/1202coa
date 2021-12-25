@@ -10,31 +10,28 @@ interface V3 {
 
 interface Acc {
   aim: number;
-  position: V3;
+  pos: V3;
 }
 
 (async (): Promise<void> => {
-  const input = await readLines('./input/2');
+  const lines = await readLines('./input/2');
 
   const {
-    position: { x, z },
-  } = input.reduce(
-    ({ aim, position: { x, y, z } }: Acc, rawInstruction: string): Acc => {
-      const [, direction, rawValue] = /(\w+) (\d+)/.exec(rawInstruction)!;
+    pos: { x, z },
+  } = lines.reduce(
+    ({ aim, pos: { x, y, z } }: Acc, line: string): Acc => {
+      const [, dir, rawValue] = /(forward|down|up) (\d+)/.exec(line)!;
       const value = read10(rawValue!);
 
-      if (direction === 'forward')
-        return { aim, position: { x: x + value, y, z: z + value * aim } };
+      if (dir === 'forward')
+        return { aim, pos: { x: x + value, y, z: z + value * aim } };
 
-      if (direction === 'down')
-        return { aim: aim + value, position: { x, y, z } };
-
-      if (direction === 'up')
-        return { aim: aim - value, position: { x, y, z } };
-
-      throw new RangeError(`unknown direction: ${direction}`);
+      return {
+        aim: aim + dir! === 'down' ? value : -value,
+        pos: { x, y, z },
+      };
     },
-    { aim: 0, position: { x: 0, y: 0, z: 0 } }
+    { aim: 0, pos: { x: 0, y: 0, z: 0 } }
   );
 
   console.log(x * z);
