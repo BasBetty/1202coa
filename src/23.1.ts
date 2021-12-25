@@ -1,6 +1,4 @@
-/*
-
-✎
+/* ✎
 
 #############
 #...........#
@@ -8,11 +6,10 @@
   #B#A#D#C#
   #########
 
-D  10000    10000
-C   1000     1200 (to accomodate D)
-B    100      120 (to accomodate C)
-A     10       12 (to accomodate B)
-            11332
+D: 10000 ideal route)
+C: 1200 ideal (1000), except for two steps (200) to accomodate D
+B: 120 ideal (100), except for two steps (20) to accomodate C
+A: 12 ideal (10), except for two steps (2) to accomodate B
 
 */
 
