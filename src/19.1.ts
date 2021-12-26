@@ -21,10 +21,7 @@ const align = (ref: Scan, scan: Scan): Scan | null => {
   for (const i of ref) {
     const distRef = new Map<number, V3>();
 
-    for (const j of ref) {
-      const d = distance(j, i);
-      if (d !== 0) distRef.set(d, j);
-    }
+    for (const j of ref) distRef.set(distance(j, i), j);
 
     for (const k of scan) {
       let overlap = 0;
@@ -32,7 +29,7 @@ const align = (ref: Scan, scan: Scan): Scan | null => {
       for (const l of scan) {
         const distScan = distance(l, k);
 
-        if (distRef.has(distScan)) {
+        if (distScan !== 0 && distRef.has(distScan)) {
           overlap += 1;
 
           if (overlap === 11) {
